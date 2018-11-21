@@ -6,7 +6,8 @@
 \title{plot.matrix}
 \usage{
 \method{plot}{matrix}(x, y = NULL, digits = NA, col = NULL,
-  breaks = NULL, key = list(cex.axis = 1), na.col = "white", ...)
+  breaks = NULL, key = list(cex.axis = 1), na.col = "white",
+  fmt = NULL, fmt.key = fmt, ...)
 }
 \arguments{
 \item{x}{matrix}
@@ -15,13 +16,17 @@
 
 \item{digits}{number of digits for numeric data or length of string for non-numeric data}
 
-\item{col}{a vector of colors}
+\item{col}{a vector of colors or a function, e.g. \code{\link[grDevices]{heat.colors}} with one parameter \code{n}}
 
 \item{breaks}{breaks for numeric values or values for \code{col}}
 
 \item{key}{list of parameters used for \code{\link[graphics]{axis}}. If set to \code{NULL} then no information will be plotted.}
 
 \item{na.col}{color for missing value (default: white)}
+
+\item{fmt}{format string for writring matrix entries, overwrites \code{digits}}
+
+\item{fmt.key}{format string for writring key entries, overwrites \code{digits}. Default ist \code{fmt}}
 
 \item{...}{further parameter given to the \code{\link[graphics]{plot}} command}
 }
@@ -32,14 +37,12 @@ a plot
 Visualizes a matrix with a heatmap and distinguishes between numeric and non-numeric matrices. 
 You may need to modify \code{mar} with the \code{\link[graphics]{par}} command from its default \code{c(5.1,4.1,4.1,2.1)}.
 }
-\details{
-In case of a numeric matrix it should hold \code{length(breaks)==length(col)+1}. If not or not given at all then the 
-\code{breaks} is recalculated as an equidistant grid between \code{min(breaks)} and \code{max(breaks)}.
-If \code{col} is not given then \code{heat.color(10)} is used.
+\note{
+The use of \code{fmt} or \code{fmt.key} have the same restrictions as the use of \code{fmt} in \code{\link[base]{sprintf}}: 
 
-In case of a non-numeric matrix it should hold \code{length(breaks)==length(col)}. If  not given at allthen the 
-\code{breaks} is determined by the unique elements of the matrix. If \code{col} is not given then \code{heat.color} is used
-with the number of unique elements in \code{x}.
+\emph{The format string is passed down the OS's sprintf function, and incorrect formats can cause the latter to crash the R process. 
+R does perform sanity checks on the format, but not all possible user errors on all platforms have been tested, and some might 
+be terminal.}
 }
 \examples{
 par(mar=c(5.1, 4.1, 4.1, 4.1))
@@ -53,11 +56,15 @@ plot(x, breaks=c(0,1), digits=3, cex=0.6)
 # logical matrix
 m <- matrix(runif(50)<0.5, nrow=10)
 plot(m)
+plot(m, col=c("red", "blue"))
 plot(m, key=NULL, digits=1)
 # character matrix
 s <- matrix(sample(letters[1:10], 50, replace=TRUE), nrow=10)
 plot(s)
+plot(s, col=topo.colors)
 plot(s, digits=10)
 plot(s, digits=10, col=heat.colors(5), breaks=letters[1:5])
-
+# contingency table
+tab <- table(round(rnorm(100)), round(rnorm(100)))
+plot(unclass(tab))
 }
