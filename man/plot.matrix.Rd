@@ -5,28 +5,42 @@
 \alias{plot}
 \title{plot.matrix}
 \usage{
-\method{plot}{matrix}(x, y = NULL, digits = NA, col = NULL,
-  breaks = NULL, key = list(cex.axis = 1), na.col = "white",
-  fmt = NULL, fmt.key = fmt, ...)
+\method{plot}{matrix}(x, y = NULL, breaks = NULL, col = heat.colors,
+  na.col = "white", digits = NA, fmt.cell = NULL, fmt.key = NULL,
+  polygon.cell = NULL, polygon.key = NULL, text.cell = NULL,
+  key = list(side = 4, las = 1), axis.col = list(side = 1),
+  axis.row = list(side = 2), axis.key = NULL, ...)
 }
 \arguments{
 \item{x}{matrix}
 
 \item{y}{unused}
 
-\item{digits}{number of digits for numeric data or length of string for non-numeric data}
+\item{breaks}{breaks for numeric values or values for \code{col}}
 
 \item{col}{a vector of colors or a function, e.g. \code{\link[grDevices]{heat.colors}} with one parameter \code{n}}
 
-\item{breaks}{breaks for numeric values or values for \code{col}}
-
-\item{key}{list of parameters used for \code{\link[graphics]{axis}}. If set to \code{NULL} then no information will be plotted.}
-
 \item{na.col}{color for missing value (default: white)}
 
-\item{fmt}{format string for writring matrix entries, overwrites \code{digits}}
+\item{digits}{number of digits for numeric data or length of string for non-numeric data}
 
-\item{fmt.key}{format string for writring key entries, overwrites \code{digits}. Default ist \code{fmt}}
+\item{fmt.cell}{format string for writring matrix entries, overwrites \code{digits}, defaults to \code{NULL}}
+
+\item{fmt.key}{format string for writring key entries, overwrites \code{digits}, defaults to \code{fmt}}
+
+\item{polygon.cell}{list of parameters used for \code{\link[graphics]{polygon}} for heatmap}
+
+\item{polygon.key}{list of parameters used for \code{\link[graphics]{polygon}} for key}
+
+\item{text.cell}{list of parameters used for \code{\link[graphics]{text}} for matrix entries}
+
+\item{key}{list of parameters used for \code{\link[graphics]{axis}}. If set to \code{NULL} then no information will be plotted. Instead of \code{key=list(side=4)} you may use \code{key=4} or \code{key="right"}.}
+
+\item{axis.col}{list of parameters used for \code{\link[graphics]{axis}} for axis of matrix columns. Instead of \code{axis.col=list(side=1)} you may use \code{axis.col=1} or \code{axis.col="bottom"}.}
+
+\item{axis.row}{list of parameters used for \code{\link[graphics]{axis}} for axis of matrix rows. Instead of \code{axis.row=list(side=2)} you may use \code{axis.row=2} or \code{axis.col="left"}.}
+
+\item{axis.key}{as \code{key}}
 
 \item{...}{further parameter given to the \code{\link[graphics]{plot}} command}
 }
@@ -34,8 +48,57 @@
 a plot
 }
 \description{
-Visualizes a matrix with a heatmap and distinguishes between numeric and non-numeric matrices. 
-You may need to modify \code{mar} with the \code{\link[graphics]{par}} command from its default \code{c(5.1,4.1,4.1,2.1)}.
+Visualizes a matrix with a colored heatmap and optionally a color key. It distinguishes between numeric and non-numeric matrices. 
+You may need to modify \code{mar} with the \code{\link[graphics]{par}} command from its default \code{c(5.1,4.1,4.1,2.1)}. 
+For further see the vignette \code{vignette('plot.matrix')}
+}
+\details{
+A color key is drawn if either \code{key} (defaults to \code{list(cex=1)}) or \code{fmt.key} 
+(defaults to \code{NULL}) is not \code{NULL}. 
+
+If you want to plot the matrix entries you must set either \code{digits} or \code{fmt}. 
+For a non-numeric matrix \code{digits} gives the length of the string printed, a negative value 
+results in right-justified string. For a numeric matrix \code{digits} determines the number of 
+decimal places,  a negative value uses a "exponential" decimal notation. You may set format 
+strings \code{fmt} and \code{fmt.key} directly. Settings \code{digits} leads to the following 
+format strings (\code{n} the absolute value of \code{digits}):
+
+\tabular{ll}{
+\code{x} numeric and \code{digits>0}:\tab \code{"\%+.nf"}\cr
+\code{x} numeric and \code{digits<0}:\tab \code{"\%+.ne"}\cr
+\code{x} non-numeric and \code{digits>0}:\tab \code{"\%+ns"}\cr
+\code{x} non-numeric and \code{digits<0}:\tab \code{"\%-ns"}\cr
+}
+
+If no colors are given then the \code{\link[grDevices]{heat.colors}} will be used. Alternatively you may specify your own color function 
+that delivers a vector with \code{n} colors if called by \code{col(n)}. The final colors and breaks used 
+depend if \code{plot.matrix} gets a numeric or non-numeric matrix.
+
+\strong{Numeric matrix:} In general it must hold \code{length(col)+1==length(breaks)}.
+  \describe{
+  \item{1. \code{breaks==NULL} and \code{col==NULL}}{The colors are taken from \code{heat.colors(10)} and the eleven breaks are calculated as an equidistant grid 
+        between \code{min(x)} and \code{max(x)}.}
+  \item{2. \code{breaks==NULL} and \code{col} is a color function}{Ten colors are taken from the color function and eleven breaks are calculated as an equidistant grid 
+        between \code{min(x)} and \code{max(x)}.}
+  \item{3. \code{breaks==NULL} and \code{col} is a vector of colors}{The \code{length(col)+1} breaks are calculated as an equidistant grid 
+        between \code{min(x)} and \code{max(x)}.}  
+  \item{4. \code{breaks} are given and \code{col==NULL}}{The colors are taken from \code{heat.colors(length(breaks)-1)}.}
+  \item{5. \code{breaks} are given and \code{col} is a color function}{The \code{length(breaks)-1} colors are taken from the color function.}
+  \item{6. \code{breaks} are given and \code{col} is a vector of colors}{If not \code{length(col)+1==length(breaks)} holds then 
+  the \code{length(col)+1} breaks are calculated as an equidistant grid between \code{min(breaks)} and \code{max(breaks)}.}
+}
+
+\strong{Non-numeric matrix:} In general it must hold \code{length(col)==length(breaks)}. At first the number of unique elements in \code{x} is determined: \code{nu}.
+  \describe{
+  \item{1. \code{breaks==NULL} and \code{col==NULL}}{The colors are taken from \code{heat.colors(nu)} and the breaks are set to the unique elements of \code{x}.}
+  \item{2. \code{breaks==NULL} and \code{col} is a color function}{The \code{nu} colors are taken from color function and the breaks are set to the unique elements of \code{x}.}
+  \item{3. \code{breaks==NULL} and \code{col} is a vector of colors}{The \code{length(col)} breaks are calculated as an equidistant grid 
+        between \code{min(x)} and \code{max(x)}.}  
+  \item{4. \code{breaks} are given and \code{color==NULL}}{The colors are taken from \code{heat.colors(length(breaks))}.}
+  \item{5. \code{breaks} are given and \code{color} is a color function}{The \code{length(breaks)} colors are taken from color function.}
+  \item{6. \code{breaks} are given and \code{color} is a vector of colors}{If not \code{length(colors)==length(breaks)} holds then 
+  either \code{breaks} or \code{color} is shorten to the shorter of both.}
+}
 }
 \note{
 The use of \code{fmt} or \code{fmt.key} have the same restrictions as the use of \code{fmt} in \code{\link[base]{sprintf}}: 
@@ -52,7 +115,7 @@ plot(x)
 plot(x, key=NULL)
 plot(x, key=list(cex.axis=0.5, tick=FALSE))
 plot(x, digits=3)
-plot(x, breaks=c(0,1), digits=3, cex=0.6)
+plot(x, breaks=range(x), digits=3, cex=0.6)
 # logical matrix
 m <- matrix(runif(50)<0.5, nrow=10)
 plot(m)
@@ -63,8 +126,13 @@ s <- matrix(sample(letters[1:10], 50, replace=TRUE), nrow=10)
 plot(s)
 plot(s, col=topo.colors)
 plot(s, digits=10)
-plot(s, digits=10, col=heat.colors(5), breaks=letters[1:5])
+plot(s, digits=1, col=heat.colors(5), breaks=letters[1:5])
+plot(s, digits=1, col=heat.colors(5), breaks=c('a', 'c', 'e', 'g', 'i'))
 # contingency table
 tab <- table(round(rnorm(100)), round(rnorm(100)))
 plot(unclass(tab))
+# chisquare test residuals
+cst <- chisq.test(apply(HairEyeColor, 1:2, sum))
+col <- colorRampPalette(c("blue", "white", "red"))
+plot(cst$residuals, col=col, breaks=c(-7.5, 7.5))
 }

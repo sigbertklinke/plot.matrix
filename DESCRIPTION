@@ -8,3 +8,6 @@ Maintainer: Sigbert Klinke <sigbert@hu-berlin.de>
 Description: Visualizes a matrix object plainly as heatmap. It provides a single S3 function plot for matrices.
 License: GPL-3
 RoxygenNote: 6.1.0
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

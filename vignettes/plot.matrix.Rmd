@@ -1,0 +1,253 @@
+---
+title: "plot.matrix"
+author: 
+- name: "Sigbert Klinke" 
+  email: sigbert@hu-berlin.de
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document:
+    toc: true
+vignette: > 
+  %\VignetteIndexEntry{plot.matrix} 
+  %\VignetteEngine{knitr::rmarkdown} 
+  \usepackage[utf8]{inputenc} 
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# General
+
+The aim of the `plot.matrix` is to visualize a matrix as is with a heatmap. There is no automatic reording of rows and columns done as in similar function like ``heatmap``. Additionally it should be user-friendly and give access to a lot options if necessary.
+
+Since `plot.matrix` is an S3 function you need only a R object of class `matrix` and you can use the generic `plot` function. The plot itself is composed by a heatmap (usually left) where colors represent matrix entries and a key (usually right) which links the colors to the values.  
+
+## First examples
+
+```{r fig.height=4, fig.width=4}
+library('plot.matrix')
+# numeric matrix
+x <- matrix(runif(35), ncol=5) # create a numeric matrix object
+class(x)
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+plot(x)
+# logical matrix
+m <- matrix(runif(35)<0.5, ncol=7)
+plot(m)
+# text matrix
+s <- matrix(sample(letters[1:10], 35, replace=TRUE), ncol=5)
+plot(s)
+```
+
+## Assigning colors and breaks
+
+`plot.matrix` uses the command `assignColors`, also part of `plot.matrix`, assigns 
+to each value in `x` a color based on the parameters `breaks`, `col` and `na.col` given.
+
+In case of a numeric matrix `breaks` can be 
+
+* a number, giving the number of intervals covering the range of `x`,
+* a vector of two numbers, given the range to cover with 10 intervals, or
+* a vector with more than two numbers, specify the interval borders
+
+In case of a non-numeric vector `breaks` must contain all values which are
+will get a color.
+If `breaks` is not given then a sensible default is choosen: 
+in case of a numeric vector derived from `pretty` and 
+otherwise all unique values/levels are used.
+
+`col` can be either be a vector of colors or a function which generates
+via `col(n)` a set of `n` colors. The default is to use `heat.colors`.
+
+## Structure of the plot
+
+The plot is created in several steps
+
+1. a call to the `plot` command to create the basic plot
+2. draw colored polygons for each matrix entry with the `polygon` command 
+3. if necessary add the value of each matrix entry with the `text` command in a polygon
+4. if necessary draw x- and y-axis with the `axis` command into the plot
+5. if necessary draw the key with the `axis` and the `polygon` command 
+
+## Formal parameters
+
+```{r echo=FALSE}
+p   <-formals(plot.matrix:::plot.matrix)
+p$na.col <- paste0('"', p$na.col, '"')
+out <- matrix('', nrow=length(p), ncol=4)
+out[1,1] <- 'plot.matrix('
+out[,2] <- names(p)
+cp  <- as.character(p)
+ct  <- (cp!='')
+out[ct,3] <- '=' 
+out[ct,4] <- cp[ct] 
+out[1:length(p),4] <- cp
+out[1,2] <- paste0(out[1,2], ',')
+out[2:(length(p)-1),4] <- paste0(out[2:(length(p)-1),4], ',')
+out[length(p),2] <- paste0(out[length(p),2], ')')
+#out <- cbind(out[,1], apply(out[,2:5], 1, function(e) paste0(e, collapse="")))
+knitr::kable(out)
+```
+
+You may influence the appearance by setting your own parameters:
+
+1. `...` all parameters given here will be given to the `plot` command, e.g. `xlab`, `ylab`, ....
+2. `polygon.cell` list of parameters for drawing polygons for matrix entries
+3. `text.cell` list of parameters for putting for matrix entries as texts
+4. `axis.col` and `axis.row` list of parameters for drawing for row and column axes
+5. `key`, `axis.key` and `polygon.key` to draw the key
+
+## Set global parameters
+
+You may set global parameters for all subsequent calls of `axis`, `polygon` and `text` via the `...`. The following parameters are supported
+
+function  | parameter(s)
+----------|----------------------------------------------------------------------
+`axis`    | `cex.axis`, `col.axis`, `col.ticks`, `font`, `font.axis`, `hadj`, `las`, `lwd.ticks`, `line` , `outer`, `padj`, `tck`, `tcl`, `tick`                  
+`polygon` | `angle`, `border`, `density`
+`text`    | `cex`, `font`, `vfont`
+
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+# omit all borders
+plot(x, border=NA)
+```
+
+# Modifying a plot
+
+## Defaults
+
+The default plot always draws a heatmap and a key where the colors and breaks are determined by the entries of `x`. In case of a numeric matrix ten colors from `heat.colors` are chosen and eleven breaks with cover the range of entries with an equidistant grid. In case of a non-numeric matrix each unique element gets a color determined from `heat.colors`.
+
+## Modifying the breaks
+
+In case of a numeric matrix the `breaks` give the interval borders for a color otherwise for each unique matrix entry `breaks` should contain a value. If `breaks` are not given then they will be determined from the matrix object by using the `pretty` function of base R.
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
+# we only want the range of x
+plot(x, breaks=range(x))     
+# we want seven colors
+plot(x, breaks=7)  
+# user defined breaks, out-of-range entries are colored white
+plot(x, breaks=c(0.3,0.5,0.8))  
+```
+
+## Modifying the colors
+
+### Cell colors
+
+The `col` parameter is either a vector of colors used or a function `mycolor(n)` which returns `n` colors on request. 
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
+# use a color function
+plot(x, col=topo.colors)
+# user defined breaks and colors
+plot(x, col=c('red', 'green'), breaks=c(0, 0.5, 1))   
+# non-numeric matrix
+# assign colors
+plot(m, col=c('red', 'green'))
+# assign colors and breaks directly 
+plot(m, col=c('red', 'green'), breaks=c(TRUE, FALSE))
+```
+
+Note that for numeric matrices must hold `length(breaks)==length(col)+1` and for non-numeric matrices  `length(breaks)==length(col)`.
+
+### Missing values and out-of-range matrix entries
+
+The parameter `na.col` determines the color for missing values and for matrices outside the current color scheme.
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
+x[1,1] <- NA
+plot(x, col=topo.colors)
+plot(x, col=topo.colors, na.col="red")
+plot(s, col=topo.colors, breaks=c('a', 'c', 'e', 'g', 'i'))
+```
+
+## Modifying the key
+
+### Delete the key
+
+For deleting the key set `key=NULL`: 
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
+# delete key
+plot(x, key=NULL)
+```
+
+### Move the key 
+
+For moving the key to a different axis use `key` or `axis.key`. Note that only a warning is issued if the axes
+for rows, columns or the key are at the same side.
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 5.1, 4.1))   # adapt margins
+# move key to the top and make axis text smaller
+plot(x, key=list(side=3, cex.axis=0.75), breaks=c(0,1))
+```
+
+### Change the output format of the key labels 
+
+You can either use `digits` which changes the output format for all text. If you just want to change the output format for the key labels use `fmt.key`, e.g. 
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
+# no plus sign
+plot(x, fmt.key="%.3f", breaks=c(0,1))
+```
+
+For details to the format string see `sprintf`, for non-numeric matrices `%s` should be used.
+
+***Warning: The format string is passed down the OS's sprintf function, and incorrect formats can cause the latter to crash the R process. R does perform sanity checks on the format, but not all possible user errors on all platforms have been tested, and some might be terminal.***
+
+## Modifying the row and column axes
+
+As default the row axis is drawan as y-axis and the col axis is drawn as x-axis with row and column indices.
+If the matrix has `rownames(x)` or `colnames(x)` then they will used. The same holds for the labels of the axes if `names(dimnames(x))`is not empty.
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
+plot(x, xlab="my x label", ylab="my y label")
+# The HairEyeColor has its own names
+tab <- apply(HairEyeColor,1:2, sum)
+plot(tab)
+```
+
+For moving, e.g. the column axis to the top, use 
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 5.1, 4.1))   # adapt margins
+plot(x, axis.col=list(side=3, cex.axis=0.7), axis.row=list(cex.axis=0.7))
+# or alternatively set cex.axis for all axes and use abbreviated positioning
+plot(x, axis.col=3, cex.axis=0.7)
+```
+
+For not drawing any axes use
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
+plot(x, axis.col=NULL, axis.row=NULL, xlab='', ylab='')
+```
+
+## Show matrix entries
+
+You can either use `digits` which changes the output format for all text. If you just want to change the output format for the key labels use `fmt.cell`, e.g. 
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
+# change all text output
+plot(x, digits=4, text.cell=list(cex=0.5))
+# of alternatively use the global parameter cex
+plot(x, digits=4, cex=0.5)
+# change just matrix entries (no plus sign)
+plot(x, fmt.cell='%.2f')
+```
+

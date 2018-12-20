@@ -3,7 +3,15 @@ Visualizes a matrix object plainly as heatmap. It provides a single S3 function 
 
 # Installation  
 
+## From CRAN
+
+```R
+install.packages("plot.matrix")
+```
+
 ## From github
+
+Note that from github you install the current development version.
 
 ```R
 library("devtools")
@@ -42,3 +50,8 @@ plot(s)
 plot(s, digits=10)
 plot(s, digits=10, col=heat.colors(5), breaks=letters[1:5])
 ```
+
+# History
+
+2018-12-01 Added examples for tables, extended formatting possibilities
+2018-11-27 Version 1.0
