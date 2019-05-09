@@ -1,5 +1,5 @@
 # plot.matrix
-Visualizes a matrix object plainly as heatmap. It provides a single S3 function `plot` for matrices and a function `assignColors` which assigns a specific color to each value of vector.
+Visualizes a matrix object plainly as heatmap. It provides a single S3 function `plot` for matrices and a function `assignColors` which assigns a specific color to each value of a vector.
 
 # Installation  
 
@@ -52,16 +52,16 @@ plot(s, digits=10, col=heat.colors(5), breaks=letters[1:5])
 ```
 
 ```R
-# numeric matrix
+# numeric vector
 assignColors(runif(50))
-# logical matrix
+# logical vector
 assignColors(runif(50)<0.5) 
-# character matrix
+# character vector
 assignColors(sample(letters[1:10], 50, replace=TRUE))
 ```
 
 # History
 
-2018-12-20 Vignette, assignColors
-2018-12-01 Added examples for tables, extended formatting possibilities
-2018-11-27 Version 1.0
+  * 2018-12-20 Vignette, assignColors
+  * 2018-12-01 Added examples for tables, extended formatting possibilities
+  * 2018-11-27 Version 1.0
