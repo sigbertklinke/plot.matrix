@@ -5,7 +5,7 @@
 \alias{plot}
 \title{plot.matrix}
 \usage{
-\method{plot}{matrix}(x, y = NULL, breaks = NULL, col = heat.colors,
+\method{plot}{matrix}(x, y = x, breaks = NULL, col = heat.colors,
   na.col = "white", digits = NA, fmt.cell = NULL, fmt.key = NULL,
   polygon.cell = NULL, polygon.key = NULL, text.cell = NULL,
   key = list(side = 4, las = 1), axis.col = list(side = 1),

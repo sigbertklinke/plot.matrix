@@ -43,27 +43,7 @@ otherwise all unique values/levels are used.
 via \code{col(n)} a set of \code{n} colors. The default is to use 
 \code{\link[grDevices]{heat.colors}}.
 
-Possible color functions can be based on the following packages (as of Dec 2018) 
-
-\itemize{
-\item \href{https://CRAN.R-project.org/package=cetcolor}{cetcolor}
-\item \href{https://CRAN.R-project.org/package=colormap}{colormap}
-\item \href{https://CRAN.R-project.org/package=ColorPalette}{ColorPalette}
-\item \href{https://CRAN.R-project.org/package=colorr}{colorr}
-\item \href{https://CRAN.R-project.org/package=colorRamps}{colorRamps}
-\item \href{https://CRAN.R-project.org/package=dichromat}{dichromat}
-\item \href{https://CRAN.R-project.org/package=ggsci}{ggsci}
-\item \href{https://CRAN.R-project.org/package=jcolors}{jcolors}
-\item \href{https://CRAN.R-project.org/package=morgenstemning}{morgenstemning}
-\item \href{https://CRAN.R-project.org/package=painter}{painter}
-\item \href{https://CRAN.R-project.org/package=paletteer}{paletteer}
-\item \href{https://CRAN.R-project.org/package=pals}{pals}
-\item \href{https://CRAN.R-project.org/package=Polychrome}{Polychrome}
-\item \href{https://CRAN.R-project.org/package=qualpalr}{qualpalr}
-\item \href{https://CRAN.R-project.org/package=randomcoloR}{randomcoloR}
-\item \href{https://CRAN.R-project.org/package=RColorBrewer}{RColorBrewer}
-\item \href{https://CRAN.R-project.org/package=Redmonder}{Redmonder}
-}
+Possible color functions in R packages can be found by \code{vignette('plot.matrix')}.
 }
 \examples{
 ## numeric vector

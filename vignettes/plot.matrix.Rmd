@@ -22,9 +22,14 @@ knitr::opts_chunk$set(
 
 # General
 
-The aim of the `plot.matrix` is to visualize a matrix as is with a heatmap. There is no automatic reording of rows and columns done as in similar function like ``heatmap``. Additionally it should be user-friendly and give access to a lot options if necessary.
+The aim of the package `plot.matrix` is to visualize a matrix as is with a heatmap. Automatic reording of rows and columns is only done if necessary. This is different as in similar function like ``heatmap``. Additionally it should be user-friendly and give access to a lot of options if necessary.
 
-Since `plot.matrix` is an S3 function you need only a R object of class `matrix` and you can use the generic `plot` function. The plot itself is composed by a heatmap (usually left) where colors represent matrix entries and a key (usually right) which links the colors to the values.  
+Currently the package implements the S3 functions below such that  you can use the generic `plot` function to plot matrices as heatmaps:
+
+* `plot.matrix` for a heatmap for a plain matrix,
+* `plot.loadings` for a heatmap for a loadings matrix from factor analysis or principal component analysis (reordering of rows!).
+
+The plot itself is composed by a heatmap (usually left) where colors represent matrix entries and a key (usually right) which links the colors to the values.  
 
 ## First examples
 
@@ -41,6 +46,15 @@ plot(m)
 # text matrix
 s <- matrix(sample(letters[1:10], 35, replace=TRUE), ncol=5)
 plot(s)
+```
+
+```{r fig.height=5, fig.width=5}
+library('plot.matrix')
+library('psych')
+data <- na.omit(bfi[,1:25])
+fa <- fa(data, 5, rotate="varimax")
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+plot(loadings(fa), cex=0.5)
 ```
 
 ## Assigning colors and breaks
@@ -62,6 +76,40 @@ otherwise all unique values/levels are used.
 
 `col` can be either be a vector of colors or a function which generates
 via `col(n)` a set of `n` colors. The default is to use `heat.colors`.
+
+## Choosing color palettes/functions
+
+In case that you want to provide your own color palettes/functions for plotting there are several good choices 
+within R packages:
+
+<center>
+<img src="029-r-color-palettes-r-color-scales-1.png" width="80%">
+
+Source: [Datanovia - Top R Color Palettes to Know for Great Data Visualization](https://www.datanovia.com/en/blog/top-r-color-palettes-to-know-for-great-data-visualization/)
+
+</center>
+
+* [`viridis`](https://CRAN.R-project.org/package=viridis) or [`viridisLite`](https://CRAN.R-project.org/package=viridisLite),
+* [`RColorBrewer`](https://CRAN.R-project.org/package=RColorBrewer),
+* [`ggplot2`](https://CRAN.R-project.org/package=ggplot2),
+* [`ggsci`](https://CRAN.R-project.org/package=ggsci),
+* [`wesanderson`](https://CRAN.R-project.org/package=wesanderson),
+
+* [`cetcolor`](https://CRAN.R-project.org/package=cetcolor),
+* [`colormap`](https://CRAN.R-project.org/package=colormap),
+* [`ColorPalette`](https://CRAN.R-project.org/package=ColorPalette),
+* [`colorr`](https://CRAN.R-project.org/package=colorr),
+* [`colorRamps`](https://CRAN.R-project.org/package=colorRamps),
+* [`dichromat`](https://CRAN.R-project.org/package=dichromat),
+* [`jcolors`](https://CRAN.R-project.org/package=jcolors),
+* [`morgenstemning`](https://CRAN.R-project.org/package=morgenstemning),
+* [`painter`](https://CRAN.R-project.org/package=painter),
+* [`paletteer`](https://CRAN.R-project.org/package=paletteer),
+* [`pals`](https://CRAN.R-project.org/package=pals),
+* [`Polychrome`](https://CRAN.R-project.org/package=Polychrome),
+* [`qualpalr`](https://CRAN.R-project.org/package=qualpalr),
+* [`randomcoloR`](https://CRAN.R-project.org/package=randomcoloR), or
+* [`Redmonder`](https://CRAN.R-project.org/package=Redmonder).
 
 ## Structure of the plot
 
@@ -251,3 +299,52 @@ plot(x, digits=4, cex=0.5)
 plot(x, fmt.cell='%.2f')
 ```
 
+# Plotting special matrices
+
+## Loadings matrix
+
+In factor or principal component analysis you may want to view the loadings matrix. The S3 function `plot.loadings` allows to create a heatmap with loadings. It differs from plotting a matrix by
+
+* the color key ranges from -1 to 1,
+* the breaks are set to `c(-sqrt(c(1, 0.75, 0.5, 0.25, 0.16)), 0, sqrt(c(1, 0.75, 0.5, 0.25, 0.16)))`,
+* the matrix rows, corresponding to the variables, are reordered (according to the breaks),
+* the matrix entries are printed with two digits after the comma.
+
+A typical threshold in factor analysis is an absolute loading greater equal 0.5; thus a factor "explains" 25% of the variance of a variable. Further thresholds are selected such that they explain 50% and 75% of the variable variance. Sometimes it might be useful to check wheter there are loadings a little bit under 0.5, therefore another threshold of 0.4 is added.
+
+All parameters described in **Modifying a plot** can be used in `plot.loadings` as well.
+
+```{r fig.height=5, fig.width=5}
+library('plot.matrix')
+library('psych')
+data <- na.omit(bfi[,1:25])
+fa <- fa(data, 5, rotate="varimax")
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+plot(loadings(fa), cex=0.5)
+```
+
+### No matrix entries
+
+For not printing loading entries use the parameter `digits`: 
+
+```{r fig.height=5, fig.width=5}
+library('plot.matrix')
+library('psych')
+data <- na.omit(bfi[,1:25])
+fa <- fa(data, 5, rotate="varimax")
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+plot(loadings(fa), digits=NA)
+```
+
+### No reordering of rows
+
+For not reordering the variables use the parameter `reorder`: 
+
+```{r fig.height=5, fig.width=5}
+library('plot.matrix')
+library('psych')
+data <- na.omit(bfi[,1:25])
+fa <- fa(data, 5, rotate="varimax")
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+plot(loadings(fa), reorder=FALSE, cex=0.5)
+```

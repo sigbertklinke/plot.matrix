@@ -79,8 +79,8 @@
 #' @importFrom graphics axis polygon text
 #' @importFrom utils modifyList
 #' @export
-#'
 #' @aliases plot
+#'
 #' @examples
 #' par(mar=c(5.1, 4.1, 4.1, 4.1))
 #' # numeric matrix
@@ -109,7 +109,7 @@
 #' cst <- chisq.test(apply(HairEyeColor, 1:2, sum))
 #' col <- colorRampPalette(c("blue", "white", "red"))
 #' plot(cst$residuals, col=col, breaks=c(-7.5, 7.5))
-plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors, na.col="white", 
+plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white", 
                         #
                         digits=NA, 
                         fmt.cell=NULL, 
@@ -283,10 +283,10 @@ plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors, na.col="white",
   if (!is.null(axis.row)) {
     if (is.null(axis.row$labels)) {
       rn <- dimnames(x)[[1]]
-      if (is.null(rn)) rn <- rev(as.character(rowindex))
-      axis.row$labels <- rn
+      if (is.null(rn)) rn <- as.character(rowindex)
+      axis.row$labels <- rev(rn)
     }
-    if (is.null(axis.row$at))   axis.row$at   <- rowindex
+    if (is.null(axis.row$at)) axis.row$at   <- rowindex
     do.call('axis', axis.row)
   }
   ## draw if key necessary 
