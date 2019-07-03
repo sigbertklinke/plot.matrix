@@ -1,7 +1,8 @@
 #' plot.loadings
 #'
 #' Visualizes the loadings matrix from a Factor Analysis or a Principal Component Analysis matrix 
-#' with a colored heatmap. You may need to modify \code{mar} with the \code{\link[graphics]{par}} command from its default \code{c(5.1,4.1,4.1,2.1)}.
+#' with a colored heatmap. You may need to modify \code{mar} with the \code{\link[graphics]{par}} 
+#' command from its default \code{c(5.1,4.1,4.1,2.1)}.
 #' See
 #' \itemize{
 #' \item \code{vignette('plot.matrix')} for detailed examples, and
@@ -17,17 +18,17 @@
 #' @export
 #'
 #' @examples
+#' data(bfi.2)
 #' library("psych")
-#' data <- na.omit(bfi[,1:25])
 #' par(mar=c(5.1, 4.1, 4.1, 4.1))
 #' # Factor analysis
-#' fa <- factanal(data, 5)
+#' fa <- factanal(bfi.2, 5)
 #' plot(loadings(fa))
 #' # Principal Component Analysis I
-#' pa <- princomp(data)
+#' pa <- princomp(bfi.2)
 #' plot(loadings(pa), digits=NA)
 #' # Principal Component Analysis II
-#' pa <- prcomp(data)
+#' pa <- prcomp(bfi.2)
 #' ld <- structure(pa$rotation, class="loadings") 
 #' plot(ld, digits=NA)
 plot.loadings <- function(x, reorder = TRUE, ...) {

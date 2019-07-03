@@ -317,8 +317,8 @@ All parameters described in **Modifying a plot** can be used in `plot.loadings` 
 ```{r fig.height=5, fig.width=5}
 library('plot.matrix')
 library('psych')
-data <- na.omit(bfi[,1:25])
-fa <- fa(data, 5, rotate="varimax")
+data(bfi.2)
+fa <- fa(bfi.2, 5, rotate="varimax")
 par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
 plot(loadings(fa), cex=0.5)
 ```
@@ -330,8 +330,8 @@ For not printing loading entries use the parameter `digits`:
 ```{r fig.height=5, fig.width=5}
 library('plot.matrix')
 library('psych')
-data <- na.omit(bfi[,1:25])
-fa <- fa(data, 5, rotate="varimax")
+data(bfi.2)
+fa <- fa(bfi.2, 5, rotate="varimax")
 par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
 plot(loadings(fa), digits=NA)
 ```
@@ -343,8 +343,8 @@ For not reordering the variables use the parameter `reorder`:
 ```{r fig.height=5, fig.width=5}
 library('plot.matrix')
 library('psych')
-data <- na.omit(bfi[,1:25])
-fa <- fa(data, 5, rotate="varimax")
+data(bfi.2)
+fa <- fa(bfi.2, 5, rotate="varimax")
 par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
 plot(loadings(fa), reorder=FALSE, cex=0.5)
 ```
