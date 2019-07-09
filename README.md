@@ -92,7 +92,9 @@ assignColors(sample(letters[1:10], 50, replace=TRUE))
 ```
 
 # History
-  * 2019-07-03 Added bfi data set
+  * 2019-07-09 Added further data sets, gray scale support, text color change
+  * 2019-07-03 Added bfi data set, Version 1.2
+  * 2019-05-13 Version 1.1
   * 2019-05-10 plot.loadings, error in y-axis labelling
   * 2018-12-20 Vignette, assignColors
   * 2018-12-01 Added examples for tables, extended formatting possibilities

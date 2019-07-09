@@ -9,7 +9,7 @@
   na.col = "white", digits = NA, fmt.cell = NULL, fmt.key = NULL,
   polygon.cell = NULL, polygon.key = NULL, text.cell = NULL,
   key = list(side = 4, las = 1), axis.col = list(side = 1),
-  axis.row = list(side = 2), axis.key = NULL, ...)
+  axis.row = list(side = 2), axis.key = NULL, max.col = 70, ...)
 }
 \arguments{
 \item{x}{matrix}
@@ -41,6 +41,8 @@
 \item{axis.row}{list of parameters used for \code{\link[graphics]{axis}} for axis of matrix rows. Instead of \code{axis.row=list(side=2)} you may use \code{axis.row=2} or \code{axis.col="left"}.}
 
 \item{axis.key}{as \code{key}}
+
+\item{max.col}{numeric: if the distance between the text color and the cell color is smaller then \code{max.col} then either \code{white} or \code{black} will be used as text color, defaults to \code{70}}
 
 \item{...}{further parameter given to the \code{\link[graphics]{plot}} command}
 }
@@ -99,6 +101,10 @@ depend if \code{plot.matrix} gets a numeric or non-numeric matrix.
   \item{6. \code{breaks} are given and \code{color} is a vector of colors}{If not \code{length(colors)==length(breaks)} holds then 
   either \code{breaks} or \code{color} is shorten to the shorter of both.}
 }
+
+If the difference between polygon color and the text color is smaller \code{max.col} then as text color is 
+either \code{white} or \code{black} (depending which one is farer away from the poylgon color). 
+The distance is computed as \eqn{\Delta C/3} as in \url{https://en.wikipedia.org/wiki/Color_difference#Euclidean} given.
 }
 \note{
 The use of \code{fmt} or \code{fmt.key} have the same restrictions as the use of \code{fmt} in \code{\link[base]{sprintf}}: 

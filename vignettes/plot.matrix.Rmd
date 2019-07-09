@@ -209,7 +209,7 @@ Note that for numeric matrices must hold `length(breaks)==length(col)+1` and for
 
 ### Missing values and out-of-range matrix entries
 
-The parameter `na.col` determines the color for missing values and for matrices outside the current color scheme.
+The parameter `na.col` determines the color for missing values and for matrix entries outside the current color scheme.
 
 ```{r fig.height=4, fig.width=4}
 par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
@@ -301,6 +301,20 @@ plot(x, fmt.cell='%.2f')
 
 # Plotting special matrices
 
+For some special matrices we have special plot routines:
+
+* loadings of a factor analysis or principal component analysis: `plot.loadings`
+* correlations: `plot.cor`
+* associations: `plot.assoc`
+* p values: `plot.pvalue`
+
+All plot routines support the parameters
+
+* `gray` and `grey` for gray scale image 
+* `reorder` for reordering rows (default: `reorder=TRUE`)
+
+Note that matrix columns are only reordered if the column names are identical to the row names.
+
 ## Loadings matrix
 
 In factor or principal component analysis you may want to view the loadings matrix. The S3 function `plot.loadings` allows to create a heatmap with loadings. It differs from plotting a matrix by
@@ -321,6 +335,19 @@ data(bfi.2)
 fa <- fa(bfi.2, 5, rotate="varimax")
 par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
 plot(loadings(fa), cex=0.5)
+```
+
+### Gray scale
+
+For using a gray color scheme add `gray=TRUE`or `grey=TRUE` to the call
+
+```{r fig.height=5, fig.width=5}
+library('plot.matrix')
+library('psych')
+data(bfi.2)
+fa <- fa(bfi.2, 5, rotate="varimax")
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+plot(loadings(fa), cex=0.5, gray=TRUE)
 ```
 
 ### No matrix entries
@@ -348,3 +375,114 @@ fa <- fa(bfi.2, 5, rotate="varimax")
 par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
 plot(loadings(fa), reorder=FALSE, cex=0.5)
 ```
+
+## Correlations and associations
+
+The S3 function `plot.cor` and `plot.assoc`  allow to create a heatmap with the coefficients. It differs from plotting a matrix by
+
+* the color key ranges from -1 to 1 for correlations and 0 to 1 for associations,
+* the breaks are set to reflect the effect sizes given by Cohen
+* the matrix rows, corresponding to the variables, are reordered using `dist` and `hclust` with the defaults on the rows, 
+* the matrix entries are printed with two digits after the comma.
+
+All parameters described in **Modifying a plot** can be used in `plot.assoc` or `plot.cor` as well.
+
+```{r fig.height=5, fig.width=5}
+library('plot.matrix')
+data(Titanic.cramer)
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+plot(as.assoc(Titanic.cramer))
+```
+
+```{r fig.height=5, fig.width=5}
+library('plot.matrix')
+library('datasets')
+c <- cor(airquality[,1:4], use="complete")
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+plot(as.cor(c))
+```
+
+### Gray scale
+
+For using a gray color scheme add `gray=TRUE`or `grey=TRUE` to the call
+
+```{r fig.height=5, fig.width=5}
+library('plot.matrix')
+data(Titanic.cramer)
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+plot(as.assoc(Titanic.cramer), gray=TRUE)
+```
+
+### No matrix entries
+
+For not printing loading entries use the parameter `digits`: 
+
+```{r fig.height=5, fig.width=5}
+library('plot.matrix')
+data(Titanic.cramer)
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+plot(as.assoc(Titanic.cramer), digits=NA)
+```
+
+### No reordering of rows
+
+For not reordering the variables use the parameter `reorder`: 
+
+```{r fig.height=5, fig.width=5}
+library('plot.matrix')
+data(Titanic.cramer)
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+plot(as.assoc(Titanic.cramer), reorder=FALSE)
+```
+
+## P values
+
+The S3 function `plot.pvalue` allows to create a heatmap from a matrix of p values. It differs from plotting a matrix by
+
+* the color key ranges from  0 to 1 
+* the breaks are set to 0, 0.1, 0.05, 0.01, 0.001 and 1
+* the matrix rows, corresponding to the variables, are reordered using `dist` and `hclust` with the defaults on the rows, 
+* the matrix entries are printed with three digits after the comma.
+
+All parameters described in **Modifying a plot** can be used in `plot.pvalue` as well.
+
+```{r fig.height=5, fig.width=5}
+library('plot.matrix')
+data(air.pvalue)
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+plot(as.pvalue(air.pvalue))
+```
+
+### Gray scale
+
+For using a gray color scheme add `gray=TRUE`or `grey=TRUE` to the call
+
+```{r fig.height=5, fig.width=5}
+library('plot.matrix')
+data(air.pvalue)
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+plot(as.pvalue(air.pvalue), gray=TRUE)
+```
+
+### No matrix entries
+
+For not printing loading entries use the parameter `digits`: 
+
+```{r fig.height=5, fig.width=5}
+library('plot.matrix')
+data(air.pvalue)
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+plot(as.pvalue(air.pvalue), digits=NA)
+```
+
+### No reordering of rows
+
+For not reordering the variables use the parameter `reorder`: 
+
+```{r fig.height=5, fig.width=5}
+library('plot.matrix')
+data(air.pvalue)
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+plot(as.pvalue(air.pvalue), reorder=FALSE)
+```
+

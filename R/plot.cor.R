@@ -1,8 +1,8 @@
-#' plot.loadings
+#' plot.cor
 #'
-#' Visualizes the loadings matrix from a Factor Analysis or a Principal Component Analysis matrix 
-#' with a gray or colored heatmap. As a rule of thumb the breaks are determined by 
-#' \code{c(-1, -0.866, -0.707, -0.5, -0.4, 0, +0.4, +0.5, +0.707, +0.866, +1)} is used.
+#' Visualizes a correlation matrix with a colored or gray heatmap. As a rule of thumb the breaks are determined 
+#' by the \href{https://en.wikipedia.org/wiki/Effect_size#Pearson_r_or_correlation_coefficient}{effect sizes} given by 
+#' Cohen (\code{c(-1, -0.4, -0.2, -0.05, 0, +0.05, +0.2, +0.4, +1)}. 
 #' You may need to modify \code{mar} with the \code{\link[graphics]{par}} command from its default 
 #' \code{c(5.1,4.1,4.1,2.1)}.
 #' See
@@ -13,7 +13,7 @@
 #'
 #' @details If either the parameter \code{grey} or \code{gray} is \code{TRUE} then a gray color palette is used.
 #'
-#' @param x matrix: loadings
+#' @param x matrix: correlation within [-1,+1]
 #' @param reorder logical: if the rows (variables) of the loading matrix should be reordered (default: \code{TRUE})
 #' @param grey logical: should be a gray scale color palette used or not (default: \code{FALSE})
 #' @param gray logical: should be a gray scale color palette used or not (default: \code{FALSE})
@@ -21,40 +21,31 @@
 #' 
 #' @return a plot
 #' @importFrom grDevices colorRampPalette
+#' @importFrom stats hclust dist
 #' @export
 #'
 #' @examples
-#' data(bfi.2)
-#' library("psych")
 #' par(mar=c(5.1, 4.1, 4.1, 4.1))
-#' # Factor analysis
-#' fa <- factanal(bfi.2, 5)
-#' plot(loadings(fa))
-#' plot(loadings(fa), grey=TRUE)
-#' # Principal Component Analysis I
-#' pa <- princomp(bfi.2)
-#' plot(loadings(pa), digits=NA)
-#' # Principal Component Analysis II
-#' pa <- prcomp(bfi.2)
-#' ld <- structure(pa$rotation, class="loadings") 
-#' plot(ld, digits=NA)
-plot.loadings <- function(x, reorder = TRUE, gray=FALSE, grey=FALSE, ...) {
+#' # correlation matrix
+#' c <- cor(airquality[,1:4], use="pairwise")
+#' plot(as.cor(c))
+#' plot(as.cor(c), gray=TRUE)
+#' plot(as.cor(c[,1:3]), reorder=FALSE)
+plot.cor <- function(x, reorder = TRUE, gray=FALSE, grey=FALSE, ...) {
   args <- list(...)
   if (is.null(args$main)) args$main <- paste(deparse(substitute(x)), collapse = "\n")
-  if (is.null(args$breaks)) args$breaks <- c(-sqrt(c(1, 0.75, 0.5, 0.25, 0.16)), sqrt(c(0.16, 0.25, 0.50, 0.75, 1)))
+  if (is.null(args$breaks)) args$breaks <- c(-c(1, 0.4, 0.2, 0.05), c(0.05, 0.2, 0.4, 1))
   if (is.null(args$digits)) args$digits <- 2
-  if (is.null(args$xlab)) args$xlab <- "Component"
-  if (is.null(args$ylab)) args$ylab <- "Variable"
   args$x <- unclass(x)
   if (is.null(args$col)) {
     args$col <- if (grey||gray) colorRampPalette(c("black", "white", "black")) else colorRampPalette(c("blue", "white", "red"))
   }
   if (is.null(rownames(args$x))) rownames(args$x) <- sprintf("V%.0f", 1:nrow(x))
   if (reorder) {
-    fi <- matrix(findInterval(abs(args$x), args$breaks), ncol=ncol(args$x))
-    l <- c(split(fi,  rep(1:ncol(fi), each = nrow(fi))), split(abs(args$x),  rep(1:ncol(args$x), each = nrow(args$x))))
-    o  <- do.call('order', l)
-    args$x <- args$x[rev(o),]
+    o  <- hclust(dist(args$x))$order
+    rn <- rownames(x)
+    cn <- colnames(x)
+    args$x <- if ((length(cn)==length(rn)) && all(rn==cn)) args$x[o,o] else args$x[o,]
   }
   do.call("plot.matrix", args)
 }

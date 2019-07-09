@@ -74,3 +74,54 @@
 #' par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
 #' plot(loadings(fa), cex=0.5)
 "bfi.2"
+
+#' New York Air Quality Measurements
+#' 
+#' p-values of pairwise correlation test of the complete-cases of 
+#' daily air quality measurements in New York, May to September 1973.
+#' 
+#' @docType data
+#' 
+#' @usage data(air.pvalue)
+#' 
+#' @format
+#' A 4x4 matrix with p values of pairwise correlation tests (\code{\link[stats]{cor.test}}).
+#'   \describe{
+#'     \item{\code{Ozone}}{Ozone (ppb)}
+#'     \item{\code{Solar.R}}{Solar R (lang)}
+#'     \item{\code{Wind}}{Wind (mph)}
+#'     \item{\code{Temp}}{Temperature (degrees F)}
+#' }
+#'    
+#' @source  The data are derived from the \link[datasets:airquality]{New York Air Quality Measurements} data set.
+#' @references Chambers, J. M., Cleveland, W. S., Kleiner, B. and Tukey, P. A. (1983) Graphical Methods for Data Analysis. Belmont, CA: Wadsworth.
+#' 
+#' @examples
+#' data(air.pvalue)
+#' plot(as.pvalue(air.pvalue))
+"air.pvalue"
+
+#' Survival of passengers on the Titanic
+#' 
+#' Matrix of Cramer's V computed on the variables economic status (class), sex, age and survival of the 
+#' fate of passengers on the fatal maiden voyage of the ocean liner 'Titanic'.
+#' 
+#' @docType data
+#' 
+#' @usage data(Titanic.cramer)
+#' 
+#' @format
+#' A 4x4 matrix with Cramer's V computed on
+#'   \describe{
+#'     \item{\code{Class}}{1st, 2nd, 3rd, Crew}
+#'     \item{\code{Sex}}{Male, Female}
+#'     \item{\code{Age}}{Child, Adult}
+#'     \item{\code{Survived}}{No, Yes}
+#' }
+#'    
+#' @source  The data are derived from the \link[datasets:Titanic]{Survival of passengers on the Titanic} data set.
+#' 
+#' @examples
+#' data(Titanic.cramer)
+#' plot(as.assoc(Titanic.cramer))
+"Titanic.cramer"

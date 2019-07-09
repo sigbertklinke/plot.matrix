@@ -52,6 +52,10 @@
 #'   either \code{breaks} or \code{color} is shorten to the shorter of both.}
 #' }
 #'
+#' If the difference between polygon color and the text color is smaller \code{max.col} then as text color is 
+#' either \code{white} or \code{black} (depending which one is farer away from the poylgon color). 
+#' The distance is computed as \eqn{\Delta C/3} as in \url{https://en.wikipedia.org/wiki/Color_difference#Euclidean} given.
+#' 
 #' @note The use of \code{fmt} or \code{fmt.key} have the same restrictions as the use of \code{fmt} in \code{\link[base]{sprintf}}: 
 #' 
 #' \emph{The format string is passed down the OS's sprintf function, and incorrect formats can cause the latter to crash the R process. 
@@ -73,6 +77,7 @@
 #' @param text.cell list of parameters used for \code{\link[graphics]{text}} for matrix entries
 #' @param axis.col list of parameters used for \code{\link[graphics]{axis}} for axis of matrix columns. Instead of \code{axis.col=list(side=1)} you may use \code{axis.col=1} or \code{axis.col="bottom"}.
 #' @param axis.row list of parameters used for \code{\link[graphics]{axis}} for axis of matrix rows. Instead of \code{axis.row=list(side=2)} you may use \code{axis.row=2} or \code{axis.col="left"}.
+#' @param max.col numeric: if the distance between the text color and the cell color is smaller then \code{max.col} then either \code{white} or \code{black} will be used as text color, defaults to \code{70}
 #' @param ... further parameter given to the \code{\link[graphics]{plot}} command
 #' @return a plot
 #' @importFrom grDevices heat.colors col2rgb
@@ -125,6 +130,8 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
                         axis.row=list(side=2),
                         axis.key=NULL,
                         #
+                        max.col=70,
+                        #
                         ...) {
   # from https://stackoverflow.com/questions/13289009/check-if-character-string-is-a-valid-color-representation
   areColors <- function(x) {
@@ -132,6 +139,16 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
       tryCatch(is.matrix(col2rgb(X)), 
                error = function(e) FALSE)
     })
+  }
+  # from https://en.wikipedia.org/wiki/Color_difference#Euclidean
+  colorDist <- function(c1, c2) {
+    rgb1 <- col2rgb(c1)
+    rgb2 <- col2rgb(c2)
+    rq <- (rgb1[1]+rgb2[1])/2
+    dr <- rgb1[1]-rgb2[1]
+    dg <- rgb1[2]-rgb2[2]
+    db <- rgb1[3]-rgb2[3]
+    sqrt((2+rq/256)*dr*dr+4*dg*dg+(2+(255-rq)/256)*db*db)/3
   }
   #
   createAxis <- function(defaults, globals, args) {
@@ -150,7 +167,7 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
   #
   main     <- paste(deparse(substitute(x)), collapse = "\n")
   ## determine colors and breaks: set of colors (=1) or color function (=2)
-#  browser()
+  #browser()
   color  <- assignColors(as.vector(x), breaks=breaks, col=col, na.col=na.col)
   col    <- attr(color, 'col')
   breaks <- attr(color, 'breaks')  
@@ -258,7 +275,7 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
     for (j in colindex) {
       px               <- j
       polygon.cell$x   <- c(px-0.5, px-0.5, px+0.5, px+0.5)
-      polygon.cell$col <- colmat[i,j]
+      polygon.cell$col <- colmat[i,j] 
       do.call('polygon', polygon.cell) ### polygon
       if (!is.null(fmt.cell)) {
         if (matrixtype==1) sij <- x[i, j]
@@ -266,7 +283,15 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
         text.cell$x      <- px
         text.cell$y      <- py
         text.cell$labels <- sprintf(fmt.cell, sij)
+        # if background color and text color are too similar
+        tcc <- if (is.null(text.cell$col)) 'black' else text.cell$col
+        rcl <- NULL
+        if (colorDist(tcc, polygon.cell$col)<max.col) { 
+          if (colorDist(tcc,'white')>colorDist(tcc,'black')) rcl <- 'white' else 'black'
+        }
+        if (!is.null(rcl)) { tcc <- text.cell$col; text.cell$col <- rcl}
         do.call('text', text.cell) ## text
+        if (!is.null(rcl)) { text.cell$col <- tcc}
       }
     }
   }
