@@ -194,21 +194,23 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
     }
   }
   ## shall we plot the key?
-  if (!(is.null(key) && is.null(fmt.key) && is.null(polygon.key) && is.null(axis.key))) {
-    if (is.null(axis.key)) {
-      axis.key <- if (is.null(key)) list() else key
-      if (is.null(axis.key$side)) axis.key$side <- 4
-    }
-    if (is.null(fmt.key)) {
-      if (matrixtype==1) {
-        digits  <- as.integer(2-log10(diff(breaks)[1])) 
-        fmt.key <- if (digits<0) sprintf("%%+.%.0fe", -digits) else sprintf("%%+.%.0ff", digits)
+  if (!(is.null(key))) {
+    if (!(is.null(fmt.key) && is.null(polygon.key) && is.null(axis.key))) {
+      if (is.null(axis.key)) {
+        axis.key <- if (is.null(key)) list() else key
+        if (is.null(axis.key$side)) axis.key$side <- 4
       }
-      if (matrixtype==2) {   
-        fmt.key <- "%s"
+      if (is.null(fmt.key)) {
+        if (matrixtype==1) {
+          digits  <- as.integer(2-log10(diff(breaks)[1])) 
+          fmt.key <- if (digits<0) sprintf("%%+.%.0fe", -digits) else sprintf("%%+.%.0ff", digits)
+        }
+        if (matrixtype==2) {   
+          fmt.key <- "%s"
+        }
       }
-    }
-  } 
+    } 
+  }
   ## prepare basic plot
   args <- ellipsis <- list(...)
   apar <- c('cex.axis', 'col.axis', 'col.ticks', 'font', 'font.axis', 'hadj', 'las', 
