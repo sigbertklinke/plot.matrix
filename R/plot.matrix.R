@@ -191,6 +191,14 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
     if (!is.na(digits)) {
       if (matrixtype==1) fmt.key <- if (digits<0) sprintf("%%+.%.0fe", -digits) else sprintf("%%+.%.0ff", digits)
       if (matrixtype==2) fmt.key <- if (digits<0) sprintf("%%+.%.0fs", -digits) else sprintf("%%+.%.0fs", digits)
+    } else {
+      if (matrixtype==1) {
+        digits  <- as.integer(2-log10(diff(breaks)[1])) 
+        fmt.key <- if (digits<0) sprintf("%%+.%.0fe", -digits) else sprintf("%%+.%.0ff", digits)
+      }
+      if (matrixtype==2) {   
+        fmt.key <- "%s"
+      }
     }
   }
   ## shall we plot the key?
@@ -199,15 +207,6 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
       if (is.null(axis.key)) {
         axis.key <- if (is.null(key)) list() else key
         if (is.null(axis.key$side)) axis.key$side <- 4
-      }
-      if (is.null(fmt.key)) {
-        if (matrixtype==1) {
-          digits  <- as.integer(2-log10(diff(breaks)[1])) 
-          fmt.key <- if (digits<0) sprintf("%%+.%.0fe", -digits) else sprintf("%%+.%.0ff", digits)
-        }
-        if (matrixtype==2) {   
-          fmt.key <- "%s"
-        }
       }
     } 
   }
