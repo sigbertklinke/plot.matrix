@@ -1,15 +1,14 @@
 Package: plot.matrix
 Type: Package
 Title: Visualizes a Matrix as Heatmap
-Version: 1.3
-Date: 2019-07-03
+Version: 1.1
+Date: 2018-11-15
 Author: Sigbert Klinke
 Maintainer: Sigbert Klinke <sigbert@hu-berlin.de>
-Description: Visualizes a matrix object plainly as heatmap. It provides S3 functions to plot simple matrices and loading matrices.
+Description: Visualizes a matrix object plainly as heatmap. It provides a single S3 function plot for matrices.
 License: GPL-3
 RoxygenNote: 6.1.1
-LazyData: true
+Imports: psych
 Suggests: knitr,
-    rmarkdown,
-    psych
+    rmarkdown
 VignetteBuilder: knitr

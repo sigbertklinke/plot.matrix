@@ -69,7 +69,7 @@
 #' 
 #' @examples
 #' data(bfi.2)
-#' library('psych')
+#' library("psych")
 #' fa <- fa(bfi.2, 5, rotate="varimax")
 #' par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
 #' plot(loadings(fa), cex=0.5)

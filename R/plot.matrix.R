@@ -2,7 +2,7 @@
 #'
 #' Visualizes a matrix with a colored heatmap and optionally a color key. It distinguishes between numeric and non-numeric matrices. 
 #' You may need to modify \code{mar} with the \code{\link[graphics]{par}} command from its default \code{c(5.1,4.1,4.1,2.1)}. 
-#' For further see the vignette \code{vignette('plot.matrix')}
+#' For further see the vignette \code{vignettes('plot.matrix')}
 #'
 #' @details 
 #' A color key is drawn if either \code{key} (defaults to \code{list(cex=1)}) or \code{fmt.key} 
@@ -52,10 +52,6 @@
 #'   either \code{breaks} or \code{color} is shorten to the shorter of both.}
 #' }
 #'
-#' If the difference between polygon color and the text color is smaller \code{max.col} then as text color is 
-#' either \code{white} or \code{black} (depending which one is farer away from the poylgon color). 
-#' The distance is computed as \eqn{\Delta C/3} as in \url{https://en.wikipedia.org/wiki/Color_difference#Euclidean} given.
-#' 
 #' @note The use of \code{fmt} or \code{fmt.key} have the same restrictions as the use of \code{fmt} in \code{\link[base]{sprintf}}: 
 #' 
 #' \emph{The format string is passed down the OS's sprintf function, and incorrect formats can cause the latter to crash the R process. 
@@ -77,15 +73,14 @@
 #' @param text.cell list of parameters used for \code{\link[graphics]{text}} for matrix entries
 #' @param axis.col list of parameters used for \code{\link[graphics]{axis}} for axis of matrix columns. Instead of \code{axis.col=list(side=1)} you may use \code{axis.col=1} or \code{axis.col="bottom"}.
 #' @param axis.row list of parameters used for \code{\link[graphics]{axis}} for axis of matrix rows. Instead of \code{axis.row=list(side=2)} you may use \code{axis.row=2} or \code{axis.col="left"}.
-#' @param max.col numeric: if the distance between the text color and the cell color is smaller then \code{max.col} then either \code{white} or \code{black} will be used as text color, defaults to \code{70}
 #' @param ... further parameter given to the \code{\link[graphics]{plot}} command
 #' @return a plot
 #' @importFrom grDevices heat.colors col2rgb
 #' @importFrom graphics axis polygon text
 #' @importFrom utils modifyList
 #' @export
-#' @aliases plot
 #'
+#' @aliases plot
 #' @examples
 #' par(mar=c(5.1, 4.1, 4.1, 4.1))
 #' # numeric matrix
@@ -94,7 +89,7 @@
 #' plot(x, key=NULL)
 #' plot(x, key=list(cex.axis=0.5, tick=FALSE))
 #' plot(x, digits=3)
-#' plot(x, breaks=range(x), digits=3, cex=0.6)
+#' plot(x, breaks=c(0,1), digits=3, cex=0.6)
 #' # logical matrix
 #' m <- matrix(runif(50)<0.5, nrow=10)
 #' plot(m)
@@ -113,8 +108,8 @@
 #' # chisquare test residuals
 #' cst <- chisq.test(apply(HairEyeColor, 1:2, sum))
 #' col <- colorRampPalette(c("blue", "white", "red"))
-#' plot(cst$residuals, col=col, breaks=c(-7.5, 7.5))
-plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white", 
+#' plot(cst$residuals, col=col, breaks=c(-7,7))
+plot.matrix <- function(x, y=NULL, breaks=NULL, col=NULL, na.col="white", 
                         #
                         digits=NA, 
                         fmt.cell=NULL, 
@@ -130,8 +125,6 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
                         axis.row=list(side=2),
                         axis.key=NULL,
                         #
-                        max.col=70,
-                        #
                         ...) {
   # from https://stackoverflow.com/questions/13289009/check-if-character-string-is-a-valid-color-representation
   areColors <- function(x) {
@@ -139,16 +132,6 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
       tryCatch(is.matrix(col2rgb(X)), 
                error = function(e) FALSE)
     })
-  }
-  # from https://en.wikipedia.org/wiki/Color_difference#Euclidean
-  colorDist <- function(c1, c2) {
-    rgb1 <- col2rgb(c1)
-    rgb2 <- col2rgb(c2)
-    rq <- (rgb1[1]+rgb2[1])/2
-    dr <- rgb1[1]-rgb2[1]
-    dg <- rgb1[2]-rgb2[2]
-    db <- rgb1[3]-rgb2[3]
-    sqrt((2+rq/256)*dr*dr+4*dg*dg+(2+(255-rq)/256)*db*db)/3
   }
   #
   createAxis <- function(defaults, globals, args) {
@@ -166,21 +149,64 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
   }
   #
   main     <- paste(deparse(substitute(x)), collapse = "\n")
-  ## determine colors and breaks: set of colors (=1) or color function (=2)
-  #browser()
-  color  <- assignColors(as.vector(x), breaks=breaks, col=col, na.col=na.col)
-  col    <- attr(color, 'col')
-  breaks <- attr(color, 'breaks')  
+  ## determine color type: set of colors (=1) or color function (=2)
+  coltype <- 0
+  if (is.null(col)) { 
+    col  <- heat.colors
+    coltype <- 2
+  } else if (is.function(col)) {
+    coltype <- 2
+  } else if (all(areColors(col))) {
+    coltype <- 1
+  }
+  if (!coltype) stop('non convertible color type')
   ## determine matrix type: numerical (=1) or non-numerical (=2)
   matrixtype <- 0
   if (('numeric' %in% class(x[1,1])) | (('integer' %in% class(x[1,1])))) {
-    matrixtype <- 1
+    matrixtype  <- 1
+    #
+    if (is.null(breaks)) {
+      if (coltype==1) {
+        breaks <- seq(from=min(x, na.rm=TRUE), to=max(x, na.rm=TRUE), length.out=length(col)+1)
+      }
+      if (coltype==2) {
+        col     <- col(10)
+        coltype <- 1
+        breaks <- seq(from=min(x, na.rm=TRUE), to=max(x, na.rm=TRUE), length.out=length(col)+1)
+      }
+    } else {
+      if (coltype==1) {
+        if (length(col)+1!=length(breaks)) breaks <- seq(from=min(breaks, na.rm=TRUE), to=max(breaks, na.rm=TRUE), length.out=length(col)+1)
+      }
+      if (coltype==2) {
+        if (length(breaks)<3) {
+          col     <- col(10)
+          coltype <- 1
+          breaks <- seq(from=min(breaks, na.rm=TRUE), to=max(breaks, na.rm=TRUE), length.out=length(col)+1)          
+        } else {
+          col     <- col(length(breaks)-1)
+          coltype <- 1
+        }
+      }
+    }
+    if (length(col)+1!=length(breaks)) stop("colors and breaks do not match")
   } else {
     matrixtype <- 2
+    v <- factor(x)
+    x <- matrix(v, ncol=ncol(x))
+    if (coltype==1) {
+      if (is.null(breaks)) breaks <- levels(v)
+      if (length(col)<length(breaks)) breaks <- breaks[1:length(col)]
+      if (length(breaks)<length(col)) col <- col[1:length(breaks)]
+    }
+    if (coltype==2) {
+      if (is.null(breaks)) breaks <- levels(v)
+      col <- col(length(breaks))
+    }
+    if (length(col)!=length(breaks)) stop("colors and breaks do not match")
   }
   if (!matrixtype) stop('non convertible data type')
   ## prepare formats
-#  browser()
   if (is.null(fmt.cell)) {
     if (!is.na(digits)) {
       if (matrixtype==1) fmt.cell <- if (digits<0) sprintf("%%+.%.0fe", -digits) else sprintf("%%+.%.0ff", digits)
@@ -191,7 +217,15 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
     if (!is.na(digits)) {
       if (matrixtype==1) fmt.key <- if (digits<0) sprintf("%%+.%.0fe", -digits) else sprintf("%%+.%.0ff", digits)
       if (matrixtype==2) fmt.key <- if (digits<0) sprintf("%%+.%.0fs", -digits) else sprintf("%%+.%.0fs", digits)
-    } else {
+    }
+  }
+  ## shall we plot the key?
+  if (!(is.null(key) && is.null(fmt.key) && is.null(polygon.key) && is.null(axis.key))) {
+    if (is.null(axis.key)) {
+      axis.key <- if (is.null(key)) list() else key
+      if (is.null(axis.key$side)) axis.key$side <- 4
+    }
+    if (is.null(fmt.key)) {
       if (matrixtype==1) {
         digits  <- as.integer(2-log10(diff(breaks)[1])) 
         fmt.key <- if (digits<0) sprintf("%%+.%.0fe", -digits) else sprintf("%%+.%.0ff", digits)
@@ -200,16 +234,7 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
         fmt.key <- "%s"
       }
     }
-  }
-  ## shall we plot the key?
-  if (!(is.null(key))) {
-    if (!(is.null(fmt.key) && is.null(polygon.key) && is.null(axis.key))) {
-      if (is.null(axis.key)) {
-        axis.key <- if (is.null(key)) list() else key
-        if (is.null(axis.key$side)) axis.key$side <- 4
-      }
-    } 
-  }
+  } 
   ## prepare basic plot
   args <- ellipsis <- list(...)
   apar <- c('cex.axis', 'col.axis', 'col.ticks', 'font', 'font.axis', 'hadj', 'las', 
@@ -234,10 +259,19 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
   if (is.null(args$xaxs)) args$xaxs <- 'i'
   if (is.null(args$yaxs)) args$yaxs <- 'i'
   if (is.null(args$cex))  args$cex  <- 1
-  do.call('plot', args) ### do.call
+  do.call('plot', args, quote=TRUE) ### do.call
   ## draw matrix polygons
   # determine color
-  colmat <- matrix(color, nrow=nrow(x), ncol=ncol(x))
+  color <- c(na.col, col)
+  if (matrixtype==1) {
+    index <- 1+findInterval(x, breaks)
+    ones  <- (index==length(breaks)+1) | is.na(index)
+    index[ones] <- 1
+    max   <- which(x==max(breaks))
+    index[max] <- length(color)
+  }
+  if (matrixtype==2) index <- 1+match(x, breaks, nomatch=0)
+  color <- matrix(color[index], ncol=ncol(x))
   # build axes
   if (!is.null(axis.col)) axis.col <- createAxis(list(side=1), ellipsis[apar], axis.col)  
   if (!is.null(axis.row)) axis.row <- createAxis(list(side=2), ellipsis[apar], axis.row)
@@ -276,7 +310,7 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
     for (j in colindex) {
       px               <- j
       polygon.cell$x   <- c(px-0.5, px-0.5, px+0.5, px+0.5)
-      polygon.cell$col <- colmat[i,j] 
+      polygon.cell$col <- color[i,j]
       do.call('polygon', polygon.cell) ### polygon
       if (!is.null(fmt.cell)) {
         if (matrixtype==1) sij <- x[i, j]
@@ -284,15 +318,7 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
         text.cell$x      <- px
         text.cell$y      <- py
         text.cell$labels <- sprintf(fmt.cell, sij)
-        # if background color and text color are too similar
-        tcc <- if (is.null(text.cell$col)) 'black' else text.cell$col
-        rcl <- NULL
-        if (colorDist(tcc, polygon.cell$col)<max.col) { 
-          if (colorDist(tcc,'white')>colorDist(tcc,'black')) rcl <- 'white' else 'black'
-        }
-        if (!is.null(rcl)) { tcc <- text.cell$col; text.cell$col <- rcl}
         do.call('text', text.cell) ## text
-        if (!is.null(rcl)) { text.cell$col <- tcc}
       }
     }
   }
@@ -309,10 +335,10 @@ plot.matrix <- function(x, y=x, breaks=NULL, col=heat.colors, na.col="white",
   if (!is.null(axis.row)) {
     if (is.null(axis.row$labels)) {
       rn <- dimnames(x)[[1]]
-      if (is.null(rn)) rn <- as.character(rowindex)
-      axis.row$labels <- rev(rn)
+      if (is.null(rn)) rn <- rev(as.character(rowindex))
+      axis.row$labels <- rn
     }
-    if (is.null(axis.row$at)) axis.row$at   <- rowindex
+    if (is.null(axis.row$at))   axis.row$at   <- rowindex
     do.call('axis', axis.row)
   }
   ## draw if key necessary 
