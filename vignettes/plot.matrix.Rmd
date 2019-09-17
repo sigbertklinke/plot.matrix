@@ -148,6 +148,7 @@ You may influence the appearance by setting your own parameters:
 3. `text.cell` list of parameters for putting for matrix entries as texts
 4. `axis.col` and `axis.row` list of parameters for drawing for row and column axes
 5. `key`, `axis.key` and `polygon.key` to draw the key
+6. `max.col` to determine when text color and background color to near
 
 ## Set global parameters
 
@@ -298,6 +299,41 @@ plot(x, digits=4, cex=0.5)
 # change just matrix entries (no plus sign)
 plot(x, fmt.cell='%.2f')
 ```
+
+## Automatic text color adjustment
+
+It may happen that the text color and cell background color are [too near](https://en.wikipedia.org/wiki/Color_difference#Euclidean) which means you can not read the text anymore in a cell
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
+# Never replace text color by black or white
+plot(x, digits=2, text.cell=list(col="yellow", cex=0.75), max.col=-1) 
+```
+
+By default the text color is replaced by black or white (which is [farer  away](https://en.wikipedia.org/wiki/Color_difference#Euclidean))
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
+plot(x, digits=2, text.cell=list(col="yellow", cex=0.75)) 
+```
+
+Just replace text color if colors are nearer then the default `max.col=70` 
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
+# In fewer cells the text color will be replaced by black
+plot(x, digits=2, text.cell=list(col="yellow", cex=0.75), max.col=35) 
+```
+
+or farer away then the default
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
+# In more cells the text color will be replaced by black
+plot(x, digits=2, text.cell=list(col="yellow", cex=0.75), max.col=140) 
+```
+
+Of course, the best solution is to choose a good color scheme and a good text color ;)
 
 # Plotting special matrices
 

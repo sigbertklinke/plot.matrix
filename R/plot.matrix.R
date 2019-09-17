@@ -354,7 +354,7 @@ plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors, na.col="white",
         tcc <- if (is.null(text.cell$col)) 'black' else text.cell$col
         rcl <- NULL
         if (colorDist(tcc, polygon.cell$col)<max.col) { 
-          if (colorDist(tcc,'white')>colorDist(tcc,'black')) rcl <- 'white' else 'black'
+          if (colorDist(tcc,'white')>colorDist(tcc,'black')) rcl <- 'white' else rcl <- 'black'
         }
         if (!is.null(rcl)) { tcc <- text.cell$col; text.cell$col <- rcl}
         #
