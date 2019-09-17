@@ -21,3 +21,11 @@ a matrix with an appropriate class
 \description{
 as.XXX conversion functions
 }
+\examples{
+# as.cor
+c <- cor(airquality, use="complete.obs")
+# as.assoc
+# as.pvalue
+data(air.pvalue)
+plot(as.pvalue(air.pvalue))
+}

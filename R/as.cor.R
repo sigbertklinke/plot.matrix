@@ -10,7 +10,7 @@
 #'
 #' @examples
 #' # as.cor
-#' c <- cor(airquality, use=""complete.obs")
+#' c <- cor(airquality, use="complete.obs")
 #' # as.assoc
 #' # as.pvalue
 #' data(air.pvalue)
