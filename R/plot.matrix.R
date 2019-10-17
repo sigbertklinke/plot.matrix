@@ -70,6 +70,8 @@
 #' @param key list of parameters used for \code{\link[graphics]{axis}}. If set to \code{NULL} then no information will be plotted. Instead of \code{key=list(side=4)} you may use \code{key=4} or \code{key="right"}. 
 #' @param axis.key as \code{key}
 #' @param na.col color for missing value (default: white)
+#' @param na.cell draw cells with missing values
+#' @param na.print print NA (or any given characters) when values are missing. If \code{FALSE}, nothing is printed. If \code{na.cell} is \code{FALSE}, this will have no effect.
 #' @param fmt.cell format string for writring matrix entries, overwrites \code{digits}, defaults to \code{NULL}
 #' @param fmt.key format string for writring key entries, overwrites \code{digits}, defaults to \code{fmt}
 #' @param polygon.cell list of parameters used for \code{\link[graphics]{polygon}} for heatmap
@@ -114,7 +116,16 @@
 #' cst <- chisq.test(apply(HairEyeColor, 1:2, sum))
 #' col <- colorRampPalette(c("blue", "white", "red"))
 #' plot(cst$residuals, col=col, breaks=c(-7.5,7.5))
-plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors, na.col="white", 
+#' # triangular matrix
+#' x[upper.tri(x)] <- NA
+#' plot(x, digit=2)
+#' plot(x, na.print=FALSE)
+#' plot(x, na.cell=FALSE)
+plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors, 
+                        #
+                        na.col="white", 
+                        na.cell=TRUE,
+                        na.print=TRUE,
                         #
                         digits=NA, 
                         fmt.cell=NULL, 
@@ -325,6 +336,13 @@ plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors, na.col="white",
     axes[axis.key$side] <- axes[axis.key$side]+1
   }
   # polygons
+  if (!na.cell) na.print <- FALSE ### prevent printing cell content without cell polygon
+  if (is.logical(na.print)) {
+    if (!na.print) na.print <- ""
+  } else {
+    if (length(na.print) > 1) warning("Only the first value of \"na.print\" was used.")
+    na.print <- as.character(na.print)[1]
+  }
   pcell <- modifyList(list(), ellipsis[ppar])
   polygon.cell <- if (is.null(polygon.cell)) pcell else modifyList(pcell, polygon.cell)
   colindex <- 1:ncol(x)
@@ -342,14 +360,19 @@ plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors, na.col="white",
       polygon.cell$x   <- c(px-0.5, px-0.5, px+0.5, px+0.5)
 #      polygon.cell$col <- color[i,j]
       polygon.cell$col <- colmat[i,j] 
-      do.call('polygon', polygon.cell) ### polygon
+      if (!(!na.cell && (is.na(x[i,j]) || x[i,j] == "NA"))) do.call('polygon', polygon.cell) ### polygon
       if (!is.null(fmt.cell)) {
-        if (matrixtype==1) sij <- x[i, j]
-        if (matrixtype==2) sij <- if (is.na(digits)) x[i, j] else substr(x[i, j], 1, abs(digits))
+        if (is.na(x[i,j]) || x[i,j] == "NA") {
+          text.cell$labels <- "NA"
+        } else {
+          if (matrixtype==1) sij <- x[i, j]
+          if (matrixtype==2) sij <- if (is.na(digits)) x[i, j] else substr(x[i, j], 1, abs(digits))
+          text.cell$labels <- sprintf(fmt.cell, sij)
+        }
         text.cell$x      <- px
         text.cell$y      <- py
-        text.cell$labels <- sprintf(fmt.cell, sij)
         #
+        if (is.character(na.print)) text.cell$labels[text.cell$labels == "NA"] <- na.print
         # if background color and text color are too similar
         tcc <- if (is.null(text.cell$col)) 'black' else text.cell$col
         rcl <- NULL
