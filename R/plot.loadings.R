@@ -51,10 +51,14 @@ plot.loadings <- function(x, reorder = TRUE, gray=FALSE, grey=FALSE, ...) {
   }
   if (is.null(rownames(args$x))) rownames(args$x) <- sprintf("V%.0f", 1:nrow(x))
   if (reorder) {
-    fi <- matrix(findInterval(abs(args$x), args$breaks), ncol=ncol(args$x))
-    l <- c(split(fi,  rep(1:ncol(fi), each = nrow(fi))), split(abs(args$x),  rep(1:ncol(args$x), each = nrow(args$x))))
-    o  <- do.call('order', l)
-    args$x <- args$x[rev(o),]
+    #   till 1.3.1.
+    #   fi <- matrix(findInterval(abs(args$x), args$breaks), ncol=ncol(args$x))
+    #   l <- c(split(fi,  rep(1:ncol(fi), each = nrow(fi))), split(abs(args$x),  rep(1:ncol(args$x), each = nrow(args$x))))
+    #   o  <- do.call('order', l)
+    #   since 1.4
+    o <- apply(x, 1, function(v) { v<-v^2; c(which.max(v), -max(v))})
+    o <- order(o[1,], o[2,])
+    args$x <- args$x[o,]
   }
   do.call("plot.matrix", args)
 }

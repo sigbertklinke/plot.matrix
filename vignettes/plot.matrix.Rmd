@@ -167,6 +167,11 @@ par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
 plot(x, border=NA)
 ```
 
+# Frequently asked questions
+
+* __How can I delete the grid lines?__
+: Use the parameter `border=NA`.
+
 # Modifying a plot
 
 ## Defaults
@@ -298,6 +303,34 @@ plot(x, digits=4, text.cell=list(cex=0.5))
 plot(x, digits=4, cex=0.5)
 # change just matrix entries (no plus sign)
 plot(x, fmt.cell='%.2f')
+```
+
+## `NA` handling 
+
+Usually `NA` values in a matrix are drawn as white boxes which determined by the value of 
+the `na.col` parameter (default: white) and if the matrix entries shown by `NA
+
+```{r fig.height=4, fig.width=4}
+x <- matrix(c(NA, 1, 2, 3), ncol=2)
+par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
+plot(x, na.col='black', fmt.cell='%.0f')
+```
+
+You may enforce with `na.print` no printing of `NA`s or using a replacement text
+
+```{r fig.height=4, fig.width=4}
+x <- matrix(c(NA, 1, 2, 3), ncol=2)
+par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
+plot(x, na.col='black', fmt.cell='%.0f', na.print=FALSE)
+plot(x, na.col='black', fmt.cell='%.0f', na.print='Missing')
+```
+
+With `na.cell` you suppress printing of matrix entries at all
+
+```{r fig.height=4, fig.width=4}
+x <- matrix(c(NA, 1, 2, 3), ncol=2)
+par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
+plot(x, fmt.cell='%.0f', na.cell=FALSE)
 ```
 
 ## Automatic text color adjustment

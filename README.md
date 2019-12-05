@@ -103,6 +103,8 @@ assignColors(sample(letters[1:10], 50, replace=TRUE))
 ```
 
 # History
+  * 2019-12-06 Version 1.4
+  * 2019-12-05 Extended treatment for NAs, sorting for loadings matrices changed
   * 2019-09-16 Math annotation for plot bug(?)
   * 2019-07-09 Added further data sets, gray scale support, text color change
   * 2019-07-03 Added bfi data set, Version 1.2

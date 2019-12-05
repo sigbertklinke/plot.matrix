@@ -23,7 +23,7 @@
 
 \item{na.col}{color for missing value (default: white)}
 
-\item{na.cell}{draw cells with missing values}
+\item{na.cell}{to draw cells with missing values (default: \code{TRUE})}
 
 \item{na.print}{print NA (or any given characters) when values are missing. If \code{FALSE}, nothing is printed. If \code{na.cell} is \code{FALSE}, this will have no effect.}
 
@@ -57,7 +57,7 @@ a plot
 \description{
 Visualizes a matrix with a colored heatmap and optionally a color key. It distinguishes between numeric and non-numeric matrices. 
 You may need to modify \code{mar} with the \code{\link[graphics]{par}} command from its default \code{c(5.1,4.1,4.1,2.1)}. 
-For further see the vignette \code{vignettes('plot.matrix')}
+For further see the vignette \code{vignette('plot.matrix')}
 }
 \details{
 A color key is drawn if either \code{key} (defaults to \code{list(cex=1)}) or \code{fmt.key} 
