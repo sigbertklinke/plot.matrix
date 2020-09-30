@@ -5,12 +5,27 @@
 \alias{plot}
 \title{plot.matrix}
 \usage{
-\method{plot}{matrix}(x, y = NULL, breaks = NULL, col = heat.colors,
-  na.col = "white", na.cell = TRUE, na.print = TRUE, digits = NA,
-  fmt.cell = NULL, fmt.key = NULL, polygon.cell = NULL,
-  polygon.key = NULL, text.cell = NULL, key = list(side = 4, las =
-  1), axis.col = list(side = 1), axis.row = list(side = 2),
-  axis.key = NULL, max.col = 70, ...)
+\method{plot}{matrix}(
+  x,
+  y = NULL,
+  breaks = NULL,
+  col = heat.colors,
+  na.col = "white",
+  na.cell = TRUE,
+  na.print = TRUE,
+  digits = NA,
+  fmt.cell = NULL,
+  fmt.key = NULL,
+  polygon.cell = NULL,
+  polygon.key = NULL,
+  text.cell = NULL,
+  key = list(side = 4, las = 1),
+  axis.col = list(side = 1),
+  axis.row = list(side = 2),
+  axis.key = NULL,
+  max.col = 70,
+  ...
+)
 }
 \arguments{
 \item{x}{matrix}
@@ -52,7 +67,13 @@
 \item{...}{further parameter given to the \code{\link[graphics]{plot}} command}
 }
 \value{
-a plot
+invisibly a list with elements 
+\describe{
+\item{\code{cell[[i,j]]}}{the \code{polygon} parameters used to draw the elements of the matrix}
+\item{\code{text[[i,j]]}}{the \code{text} parameters used to draw the elements of the matrix}
+\item{\code{key[[i]]}}{the \code{polygon} parameters used to draw the elements of the key}
+}
+A \code{NULL} means the elements has not been drawn.
 }
 \description{
 Visualizes a matrix with a colored heatmap and optionally a color key. It distinguishes between numeric and non-numeric matrices. 

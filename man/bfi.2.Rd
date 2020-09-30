@@ -4,7 +4,8 @@
 \name{bfi.2}
 \alias{bfi.2}
 \title{25 Personality items representing 5 factors}
-\format{A data frame with 2436 observations on the following 25 variables (the q numbers are the SAPA item numbers).
+\format{
+A data frame with 2436 observations on the following 25 variables (the q numbers are the SAPA item numbers).
   \describe{
     \item{\code{A1}}{Am indifferent to the feelings of others. (q_146)}
     \item{\code{A2}}{Inquire about others' well-being. (q_1162)}
@@ -46,9 +47,10 @@ The item data were collected using a 6 point response scale:
  }
  as part of the Synthetic Apeture Personality Assessment (SAPA \url{https://sapa-project.org}) project.  
  To see an example of the data collection technique, visit \url{https://SAPA-project.org} or 
- the International Cognitive Ability Resource at \url{https://icar-project.com}. The items given were sampled 
+ the International Cognitive Ability Resource at \code{https://icar-project.com}. The items given were sampled 
  from the International Personality Item Pool of Lewis Goldberg using the sampling technique of SAPA.  
- This is a sample data set taken from the much larger SAPA data bank.}
+ This is a sample data set taken from the much larger SAPA data bank.
+}
 \source{
 The items are from the ipip (Goldberg, 1999). The data are from the SAPA project 
 (Revelle, Wilt and Rosenthal, 2010), collected Spring, 2010 ( \url{https://sapa-project.org}).

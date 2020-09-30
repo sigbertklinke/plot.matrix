@@ -4,8 +4,7 @@
 \alias{plot.cor}
 \title{plot.cor}
 \usage{
-\method{plot}{cor}(x, reorder = TRUE, gray = FALSE, grey = FALSE,
-  ...)
+\method{plot}{cor}(x, reorder = TRUE, gray = FALSE, grey = FALSE, ...)
 }
 \arguments{
 \item{x}{matrix: correlation within [-1,+1]}

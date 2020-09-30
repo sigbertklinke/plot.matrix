@@ -4,8 +4,7 @@
 \alias{plot.assoc}
 \title{plot.assoc}
 \usage{
-\method{plot}{assoc}(x, reorder = TRUE, gray = FALSE, grey = FALSE,
-  ...)
+\method{plot}{assoc}(x, reorder = TRUE, gray = FALSE, grey = FALSE, ...)
 }
 \arguments{
 \item{x}{matrix: association within [0,+1]}

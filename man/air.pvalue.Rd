@@ -4,13 +4,15 @@
 \name{air.pvalue}
 \alias{air.pvalue}
 \title{New York Air Quality Measurements}
-\format{A 4x4 matrix with p values of pairwise correlation tests (\code{\link[stats]{cor.test}}).
+\format{
+A 4x4 matrix with p values of pairwise correlation tests (\code{\link[stats]{cor.test}}).
   \describe{
     \item{\code{Ozone}}{Ozone (ppb)}
     \item{\code{Solar.R}}{Solar R (lang)}
     \item{\code{Wind}}{Wind (mph)}
     \item{\code{Temp}}{Temperature (degrees F)}
-}}
+}
+}
 \source{
 The data are derived from the \link[datasets:airquality]{New York Air Quality Measurements} data set.
 }

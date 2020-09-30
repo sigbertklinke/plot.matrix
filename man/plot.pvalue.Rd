@@ -4,8 +4,7 @@
 \alias{plot.pvalue}
 \title{plot.pvalue}
 \usage{
-\method{plot}{pvalue}(x, reorder = TRUE, gray = FALSE, grey = FALSE,
-  ...)
+\method{plot}{pvalue}(x, reorder = TRUE, gray = FALSE, grey = FALSE, ...)
 }
 \arguments{
 \item{x}{matrix: p-values within [0,1]}

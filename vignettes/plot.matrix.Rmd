@@ -368,6 +368,35 @@ plot(x, digits=2, text.cell=list(col="yellow", cex=0.75), max.col=140)
 
 Of course, the best solution is to choose a good color scheme and a good text color ;)
 
+## Information about drawn elements 
+
+The `plot` command returns invisibly a list of the elements drawn, a bit like `hist`. A `NULL` entry means the element has not been drawn. The polygon data may be useful for placing own elements in the graphic.
+
+```{r fig.height=4, fig.width=4}
+# numeric matrix
+x <- matrix(runif(35), ncol=5) # create a numeric matrix object
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+res <- plot(x)
+```
+
+Available are
+
+* the polygon used to draw a matrix element,
+* the text drawn for a matrix element, and
+* the polygon used to draw a key element.
+
+```{r}
+#####
+# parameters of polygon which was used to draw x[3,4]
+res$cell.polygon[[3,4]]
+#####
+# parameters of text which was used for x[3,4]
+res$cell.text[[3,4]]  # NULL since no text was drawn
+#####
+# parameters of polygon which was used to draw the second key element
+res$key.polygon[[2]]  # NULL since no text was drawn
+```
+
 # Plotting special matrices
 
 For some special matrices we have special plot routines:

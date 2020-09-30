@@ -4,13 +4,15 @@
 \name{Titanic.cramer}
 \alias{Titanic.cramer}
 \title{Survival of passengers on the Titanic}
-\format{A 4x4 matrix with Cramer's V computed on
+\format{
+A 4x4 matrix with Cramer's V computed on
   \describe{
     \item{\code{Class}}{1st, 2nd, 3rd, Crew}
     \item{\code{Sex}}{Male, Female}
     \item{\code{Age}}{Child, Adult}
     \item{\code{Survived}}{No, Yes}
-}}
+}
+}
 \source{
 The data are derived from the \link[datasets:Titanic]{Survival of passengers on the Titanic} data set.
 }

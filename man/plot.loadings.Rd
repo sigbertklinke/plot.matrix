@@ -4,8 +4,7 @@
 \alias{plot.loadings}
 \title{plot.loadings}
 \usage{
-\method{plot}{loadings}(x, reorder = TRUE, gray = FALSE,
-  grey = FALSE, ...)
+\method{plot}{loadings}(x, reorder = TRUE, gray = FALSE, grey = FALSE, ...)
 }
 \arguments{
 \item{x}{matrix: loadings}

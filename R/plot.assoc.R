@@ -22,7 +22,8 @@
 #' @return a plot
 #' @importFrom grDevices colorRampPalette
 #' @importFrom stats hclust dist
-#' @export
+#' @export 
+#' @method plot assoc 
 #'
 #' @examples
 #' par(mar=c(5.1, 4.1, 4.1, 4.1))

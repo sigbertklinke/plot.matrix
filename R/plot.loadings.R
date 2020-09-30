@@ -21,7 +21,8 @@
 #' 
 #' @return a plot
 #' @importFrom grDevices colorRampPalette
-#' @export
+#' @export 
+#' @method plot loadings
 #'
 #' @examples
 #' data(bfi.2)

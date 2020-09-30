@@ -52,7 +52,7 @@
 #'  }
 #'  as part of the Synthetic Apeture Personality Assessment (SAPA \url{https://sapa-project.org}) project.  
 #'  To see an example of the data collection technique, visit \url{https://SAPA-project.org} or 
-#'  the International Cognitive Ability Resource at \url{https://icar-project.com}. The items given were sampled 
+#'  the International Cognitive Ability Resource at \code{https://icar-project.com}. The items given were sampled 
 #'  from the International Personality Item Pool of Lewis Goldberg using the sampling technique of SAPA.  
 #'  This is a sample data set taken from the much larger SAPA data bank.
 #' 

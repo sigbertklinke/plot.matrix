@@ -81,11 +81,18 @@
 #' @param axis.row list of parameters used for \code{\link[graphics]{axis}} for axis of matrix rows. Instead of \code{axis.row=list(side=2)} you may use \code{axis.row=2} or \code{axis.col="left"}.
 #' @param max.col numeric: if the distance between the text color and the cell color is smaller then \code{max.col} then either \code{white} or \code{black} will be used as text color, defaults to \code{70}
 #' @param ... further parameter given to the \code{\link[graphics]{plot}} command
-#' @return a plot
+#' @return invisibly a list with elements 
+#' \describe{
+#' \item{\code{cell[[i,j]]}}{the \code{polygon} parameters used to draw the elements of the matrix}
+#' \item{\code{text[[i,j]]}}{the \code{text} parameters used to draw the elements of the matrix}
+#' \item{\code{key[[i]]}}{the \code{polygon} parameters used to draw the elements of the key}
+#' }
+#' A \code{NULL} means the elements has not been drawn.
 #' @importFrom grDevices heat.colors col2rgb
 #' @importFrom graphics axis polygon text
 #' @importFrom utils modifyList
-#' @export
+#' @export 
+#' @method plot matrix
 #'
 #' @aliases plot
 #' @examples
@@ -351,6 +358,12 @@ plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors,
   tcell <- modifyList(list(), ellipsis[tpar])  
   text.cell <- if (is.null(text.cell)) tcell else modifyList(tcell, text.cell)
   #
+  ret           <- list()
+  ret$cell.polygon      <- vector("list", length(x))
+  dim(ret$cell.polygon) <- dim(x) 
+  ret$cell.text         <- vector("list", length(x))
+  dim(ret$cell.text)    <- dim(x) 
+  #
   if (is.null(polygon.cell)) polygon.cell <- list() 
   for (i in rowindex) {
     py             <- nrow(x)-i+1
@@ -360,7 +373,10 @@ plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors,
       polygon.cell$x   <- c(px-0.5, px-0.5, px+0.5, px+0.5)
 #      polygon.cell$col <- color[i,j]
       polygon.cell$col <- colmat[i,j] 
-      if (!(!na.cell && (is.na(x[i,j]) || x[i,j] == "NA"))) do.call('polygon', polygon.cell) ### polygon
+      if (!(!na.cell && (is.na(x[i,j]) || x[i,j] == "NA"))) {
+        do.call('polygon', polygon.cell) ### polygon
+      }
+      ret$cell.polygon[[i,j]] <- polygon.cell # save coordinates
       if (!is.null(fmt.cell)) {
         if (is.na(x[i,j]) || x[i,j] == "NA") {
           text.cell$labels <- "NA"
@@ -382,6 +398,7 @@ plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors,
         if (!is.null(rcl)) { tcc <- text.cell$col; text.cell$col <- rcl}
         #
         do.call('text', text.cell) ## text
+        ret$cell.text[[i,j]] <- text.cell
         #
         if (!is.null(rcl)) { text.cell$col <- tcc}
         #
@@ -426,9 +443,10 @@ plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors,
     do.call('axis', axis.key) ### key axis
     pcell <- modifyList(list(), ellipsis[ppar])
     polygon.key <- if (is.null(polygon.key)) pcell else modifyList(pcell, polygon.key)
+    ret$key.polygon <- vector("list", length(col))
     for (i in 1:length(col)) {
       if (axis.key$side==1) {
-        
+        # not yet implemented?
       }
       if (axis.key$side==2) {
         polygon.key$x <- c(-0.5, -0.5, 0, 0)
@@ -444,6 +462,8 @@ plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors,
       }
       polygon.key$col <- col[i]
       do.call('polygon', polygon.key) ### polygon
+      ret$key.polygon[[i]] <- polygon.key
     }
   }
+  invisible(ret)
 }
