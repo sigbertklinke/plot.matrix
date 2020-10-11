@@ -52,7 +52,7 @@
 #' }
 #'
 #' If the difference between polygon color and the text color is smaller \code{max.col} then as text color is 
-#' either \code{white} or \code{black} (depending which one is farer away from the poylgon color). 
+#' either \code{white} or \code{black} (depending which one is farer away from the polygon color). 
 #' The distance is computed as \eqn{\Delta C/3} as in \url{https://en.wikipedia.org/wiki/Color_difference#Euclidean} given.
 #'
 #' @note The use of \code{fmt} or \code{fmt.key} have the same restrictions as the use of \code{fmt} in \code{\link[base]{sprintf}}: 
@@ -71,8 +71,8 @@
 #' @param na.col color for missing value (default: white)
 #' @param na.cell to draw cells with missing values (default: \code{TRUE})
 #' @param na.print print NA (or any given characters) when values are missing. If \code{FALSE}, nothing is printed. If \code{na.cell} is \code{FALSE}, this will have no effect.
-#' @param fmt.cell format string for writring matrix entries, overwrites \code{digits}, defaults to \code{NULL}
-#' @param fmt.key format string for writring key entries, overwrites \code{digits}, defaults to \code{fmt}
+#' @param fmt.cell format string for writing matrix entries, overwrites \code{digits}, defaults to \code{NULL}
+#' @param fmt.key format string for writing key entries, overwrites \code{digits}, defaults to \code{fmt}
 #' @param polygon.cell list of parameters used for \code{\link[graphics]{polygon}} for heatmap
 #' @param polygon.key list of parameters used for \code{\link[graphics]{polygon}} for key
 #' @param text.cell list of parameters used for \code{\link[graphics]{text}} for matrix entries

@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 # General
 
-The aim of the package `plot.matrix` is to visualize a matrix as is with a heatmap. Automatic reording of rows and columns is only done if necessary. This is different as in similar function like ``heatmap``. Additionally it should be user-friendly and give access to a lot of options if necessary.
+The aim of the package `plot.matrix` is to visualize a matrix as is with a heatmap. Automatic reordering of rows and columns is only done if necessary. This is different as in similar function like ``heatmap``. Additionally it should be user-friendly and give access to a lot of options if necessary.
 
 Currently the package implements the S3 functions below such that  you can use the generic `plot` function to plot matrices as heatmaps:
 
@@ -423,7 +423,7 @@ In factor or principal component analysis you may want to view the loadings matr
 * the matrix rows, corresponding to the variables, are reordered (according to the breaks),
 * the matrix entries are printed with two digits after the comma.
 
-A typical threshold in factor analysis is an absolute loading greater equal 0.5; thus a factor "explains" 25% of the variance of a variable. Further thresholds are selected such that they explain 50% and 75% of the variable variance. Sometimes it might be useful to check wheter there are loadings a little bit under 0.5, therefore another threshold of 0.4 is added.
+A typical threshold in factor analysis is an absolute loading greater equal 0.5; thus a factor "explains" 25% of the variance of a variable. Further thresholds are selected such that they explain 50% and 75% of the variable variance. Sometimes it might be useful to check whether there are loadings a little bit under 0.5, therefore another threshold of 0.4 is added.
 
 All parameters described in **Modifying a plot** can be used in `plot.loadings` as well.
 

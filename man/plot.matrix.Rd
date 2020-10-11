@@ -47,9 +47,9 @@ For further see the vignette \code{vignette('plot.matrix')}}
 
 \item{digits}{number of digits for numeric data or length of string for non-numeric data}
 
-\item{fmt.cell}{format string for writring matrix entries, overwrites \code{digits}, defaults to \code{NULL}}
+\item{fmt.cell}{format string for writing matrix entries, overwrites \code{digits}, defaults to \code{NULL}}
 
-\item{fmt.key}{format string for writring key entries, overwrites \code{digits}, defaults to \code{fmt}}
+\item{fmt.key}{format string for writing key entries, overwrites \code{digits}, defaults to \code{fmt}}
 
 \item{polygon.cell}{list of parameters used for \code{\link[graphics]{polygon}} for heatmap}
 
@@ -137,7 +137,7 @@ depend if \code{plot.matrix} gets a numeric or non-numeric matrix.
 }
 
 If the difference between polygon color and the text color is smaller \code{max.col} then as text color is 
-either \code{white} or \code{black} (depending which one is farer away from the poylgon color). 
+either \code{white} or \code{black} (depending which one is farer away from the polygon color). 
 The distance is computed as \eqn{\Delta C/3} as in \url{https://en.wikipedia.org/wiki/Color_difference#Euclidean} given.
 }
 \note{
