@@ -370,7 +370,7 @@ Of course, the best solution is to choose a good color scheme and a good text co
 
 ## Information about drawn elements 
 
-The `plot` command returns invisibly a list of the elements drawn, a bit like `hist`. A `NULL` entry means the element has not been drawn. The polygon data may be useful for placing own elements in the graphic.
+The `plot` command returns invisibly a list of the elements drawn, a bit like `hist`. A `NULL` entry means the element has not been drawn. The data may be useful for adding own elements in the graphic.
 
 ```{r fig.height=4, fig.width=4}
 # numeric matrix
@@ -379,14 +379,15 @@ par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
 res <- plot(x)
 ```
 
-Available are
+Available are the parameters for
 
-* the polygon used to draw a matrix element,
-* the text drawn for a matrix element, and
-* the polygon used to draw a key element.
+* `cell.polygon`, `cell.text`: the polygon and the text used to draw a matrix element,
+* `key.polygon`, `key.axis`: the polygon and the axis used to draw a key element, and
+* `plot`, `axis.col`, `axis.row`: the basic plot and the axes drawn.
 
 ```{r}
 #####
+names(res)
 # parameters of polygon which was used to draw x[3,4]
 res$cell.polygon[[3,4]]
 #####
@@ -394,7 +395,7 @@ res$cell.polygon[[3,4]]
 res$cell.text[[3,4]]  # NULL since no text was drawn
 #####
 # parameters of polygon which was used to draw the second key element
-res$key.polygon[[2]]  # NULL since no text was drawn
+res$key.polygon[[2]]  
 ```
 
 # Plotting special matrices

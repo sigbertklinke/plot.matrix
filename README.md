@@ -5,7 +5,7 @@ Visualizes a matrix object plainly as heatmap. It provides a
 * function `assignColors` which assigns a specific color to each value of a vector, and
 * specific functions for loadings, correlation and p-values matrices.
 
-View the vignette on [GitHub](http://htmlpreview.github.com/?https://github.com/sigbertklinke/plot.matrix/blob/master/vignettes/plot.matrix.html) or after installing with
+View the vignette on [GitHub](https://htmlpreview.github.io/?https://github.com/sigbertklinke/plot.matrix/blob/master/vignettes/plot.matrix.html) or after installing with
 
 ```R
 library("plot.matrix")

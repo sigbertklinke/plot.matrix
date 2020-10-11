@@ -3,7 +3,10 @@
 \name{plot.matrix}
 \alias{plot.matrix}
 \alias{plot}
-\title{plot.matrix}
+\title{plot.matrix
+Visualizes a matrix with a colored heatmap and optionally a color key. It distinguishes between numeric and non-numeric matrices. 
+You may need to modify \code{mar} with the \code{\link[graphics]{par}} command from its default \code{c(5.1,4.1,4.1,2.1)}. 
+For further see the vignette \code{vignette('plot.matrix')}}
 \usage{
 \method{plot}{matrix}(
   x,
@@ -69,13 +72,18 @@
 \value{
 invisibly a list with elements 
 \describe{
-\item{\code{cell[[i,j]]}}{the \code{polygon} parameters used to draw the elements of the matrix}
-\item{\code{text[[i,j]]}}{the \code{text} parameters used to draw the elements of the matrix}
-\item{\code{key[[i]]}}{the \code{polygon} parameters used to draw the elements of the key}
+\item{\code{cell.polygon[[i,j]]}}{the \code{polygon} parameters used to draw the elements of the matrix}
+\item{\code{cell.text[[i,j]]}}{the \code{text} parameters used to draw the elements of the matrix}
+\item{\code{plot}}{the \code{plot} parameters used to draw the basic plot}
+\item{\code{axis.col}}{the \code{axis} parameters used to draw column axis}
+\item{\code{axis.row}}{the \code{axis} parameters used to draw row axis}
+\item{\code{key.polygon[[i]]}}{the \code{polygon} parameters used to draw the elements of the key}
+\item{\code{key.axis}}{the \code{axis} parameters used to draw key axis}
 }
 A \code{NULL} means the elements has not been drawn.
 }
 \description{
+plot.matrix
 Visualizes a matrix with a colored heatmap and optionally a color key. It distinguishes between numeric and non-numeric matrices. 
 You may need to modify \code{mar} with the \code{\link[graphics]{par}} command from its default \code{c(5.1,4.1,4.1,2.1)}. 
 For further see the vignette \code{vignette('plot.matrix')}
