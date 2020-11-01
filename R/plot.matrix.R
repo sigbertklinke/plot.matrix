@@ -1,4 +1,5 @@
 #' plot.matrix
+#' 
 #' Visualizes a matrix with a colored heatmap and optionally a color key. It distinguishes between numeric and non-numeric matrices. 
 #' You may need to modify \code{mar} with the \code{\link[graphics]{par}} command from its default \code{c(5.1,4.1,4.1,2.1)}. 
 #' For further see the vignette \code{vignette('plot.matrix')}

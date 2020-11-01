@@ -103,6 +103,7 @@ assignColors(sample(letters[1:10], 50, replace=TRUE))
 ```
 
 # History
+  * 2010-11-01 Version 1.5.2 cleaned documentation
   * 2020-10-01 Version 1.5.0 added invisible return for plot.matrix
   * 2019-12-06 Version 1.4
   * 2019-12-05 Extended treatment for NAs, sorting for loadings matrices changed

@@ -70,7 +70,7 @@ In case of a numeric matrix `breaks` can be
 
 In case of a non-numeric vector `breaks` must contain all values which are
 will get a color.
-If `breaks` is not given then a sensible default is choosen: 
+If `breaks` is not given then a sensible default is chosen: 
 in case of a numeric vector derived from `pretty` and 
 otherwise all unique values/levels are used.
 
@@ -169,8 +169,28 @@ plot(x, border=NA)
 
 # Frequently asked questions
 
-* __How can I delete the grid lines?__
-: Use the parameter `border=NA`.
+## How can I delete the grid lines?
+ 
+Use the parameter `border=NA`.
+
+## How can I get squared boxes?
+
+Use the parameter `asp=TRUE`.
+
+## How can I rotate the axis labels such they do no overlap?
+
+Use the parameter `las`, the style of axis labels, in `axis.col`and/or `axis.row` with 
+
+* `0` = always parallel to the axis [default], 
+* `1` = always horizontal, 
+* `2` = always perpendicular to the axis, and 
+* `3` = always vertical.
+
+```{r fig.height=4, fig.width=4}
+x <- matrix(runif(35), ncol=5) # create a numeric matrix object
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins such that all labels are visible
+plot(x, axis.col=list(side=1, las=2), axis.row = list(side=2, las=1))
+```
 
 # Modifying a plot
 
@@ -264,7 +284,7 @@ For details to the format string see `sprintf`, for non-numeric matrices `%s` sh
 
 ## Modifying the row and column axes
 
-As default the row axis is drawan as y-axis and the col axis is drawn as x-axis with row and column indices.
+As default the row axis is drawn as y-axis and the col axis is drawn as x-axis with row and column indices.
 If the matrix has `rownames(x)` or `colnames(x)` then they will used. The same holds for the labels of the axes if `names(dimnames(x))`is not empty.
 
 ```{r fig.height=4, fig.width=4}
