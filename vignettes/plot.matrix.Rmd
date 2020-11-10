@@ -7,6 +7,7 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: 
   html_document:
     toc: true
+    toc_depth: 4
 vignette: > 
   %\VignetteIndexEntry{plot.matrix} 
   %\VignetteEngine{knitr::rmarkdown} 
@@ -416,6 +417,48 @@ res$cell.text[[3,4]]  # NULL since no text was drawn
 #####
 # parameters of polygon which was used to draw the second key element
 res$key.polygon[[2]]  
+```
+
+#### Example: Add shading lines 
+
+```{r}
+x <- matrix(runif(35), ncol=5) # create a numeric matrix object
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+res <- plot(x)
+
+for (i in 1:length(res$cell.polygon)) {
+  args <- res$cell.polygon[[i]]
+  args$col     <- NA       # use no color
+  args$density <- 20*x[i]  # density depends on matrix entries
+  args$angle   <- 45       
+  do.call("polygon", args)
+}
+```
+
+#### Example: Adding images 
+
+Please note that the PNGs have a transparent background. It depends on the graphic device how the transparency is taken into account.
+
+```{r}
+x <- matrix(runif(35), ncol=5) # create a numeric matrix object
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins
+res <- plot(x)
+#
+library("png")
+# PNGs are created from wikimedia commons images, CC0 by C. Koltzenburg 
+# https://commons.wikimedia.org/wiki/File:C.Koltzenburg_-_smiley-yes.xcf
+# https://commons.wikimedia.org/wiki/File:C.Koltzenburg_-_smiley_no.xcf
+happy <- readPNG(system.file('png', 'happy.png', package="plot.matrix"))
+sad   <- readPNG(system.file('png', 'sad.png', package="plot.matrix"))
+
+for (i in 1:length(res$cell.polygon)) {
+  args <- res$cell.polygon[[i]]
+  if (x[i]>0.5) {
+    rasterImage(happy, args$x[1]+0.1, args$y[1]+0.1, args$x[3]-0.1, args$y[2]-0.1)
+  } else {
+    rasterImage(sad, args$x[1]+0.1, args$y[1]+0.1, args$x[3]-0.1, args$y[2]-0.1)
+  }
+}
 ```
 
 # Plotting special matrices

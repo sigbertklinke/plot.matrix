@@ -1,8 +1,8 @@
 Package: plot.matrix
 Type: Package
 Title: Visualizes a Matrix as Heatmap
-Version: 1.5.2
-Date: 2020-10-11
+Version: 1.5.3
+Date: 2020-11-10
 Authors@R: 
   c(person("Sigbert", "Klinke", email="sigbert@hu-berlin.de", role=c("aut", "cre")),
     person("Frédéric", "Chevalier",  email="fcheval@txbiomed.org", role="ctb"))
@@ -12,6 +12,7 @@ RoxygenNote: 7.1.1
 LazyData: true
 Suggests: knitr,
     rmarkdown,
-    psych
+    psych,
+    png
 VignetteBuilder: knitr
 Encoding: UTF-8
