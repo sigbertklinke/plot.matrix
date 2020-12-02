@@ -193,6 +193,48 @@ par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins such that all labels are visible
 plot(x, axis.col=list(side=1, las=2), axis.row = list(side=2, las=1))
 ```
 
+## How can I show a matrix of parameters and, for example, their standard errors below?
+
+You need to access the position of the cell text used by accessing the invisible return of `plot.matrix`.
+The `cell.text` contains the parameters used to draw the text.
+
+__Note__ the double braces: `[[i,j]]`
+
+```{r fig.height=4, fig.width=4}
+param_est <- matrix(runif(25), nrow=5)
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins such that all labels are visible
+res <- plot(param_est, digits=2, text.cell=list(pos=3, cex=0.75))
+sderr_est <- matrix(runif(25)/10, nrow=5)
+for (i in 1:nrow(param_est)) {
+  for (j in 1:ncol(param_est)) {  
+    args <- res$cell.text[[i,j]]
+    args$labels <- paste0('(', fmt(sderr_est[i,j], 3), ')')
+    args$cex    <- 0.5
+    args$pos    <- 1
+    do.call(text, args)
+  }
+}
+```
+
+Or alternatively
+
+```{r fig.height=4, fig.width=4}
+param_est <- matrix(runif(25), nrow=5)
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins such that all labels are visible
+res <- plot(param_est, digits=2, text.cell=list(cex=0.75))
+sderr_est <- matrix(runif(25)/10, nrow=5)
+for (i in 1:nrow(param_est)) {
+  for (j in 1:ncol(param_est)) {  
+    args <- res$cell.text[[i,j]]
+    args$labels <- paste0('(', round(sderr_est[i,j], 3), ')')
+    args$cex    <- 0.6
+    args$y      <- args$y-0.3
+    do.call(text, args)
+  }
+}
+```
+
+
 # Modifying a plot
 
 ## Defaults
