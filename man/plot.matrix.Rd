@@ -16,6 +16,7 @@
   digits = NA,
   fmt.cell = NULL,
   fmt.key = NULL,
+  spacing.key = c(1, 0.5, 0),
   polygon.cell = NULL,
   polygon.key = NULL,
   text.cell = NULL,
@@ -34,7 +35,7 @@
 
 \item{breaks}{breaks for numeric values or values for \code{col}}
 
-\item{col}{a vector of colors or a function, e.g. \code{\link[grDevices]{heat.colors}} with one parameter \code{n}}
+\item{col}{a vector of colors or a function, e.g. grDevices::heat.colors()] with one parameter \code{n}}
 
 \item{na.col}{color for missing value (default: white)}
 
@@ -48,26 +49,28 @@
 
 \item{fmt.key}{format string for writing key entries, overwrites \code{digits}, defaults to \code{fmt}}
 
-\item{polygon.cell}{list of parameters used for \code{\link[graphics]{polygon}} for heatmap}
+\item{spacing.key}{spacing between plot and legend, key width, spacing between key and axis  (default: \code{c(1,0.5,0)})}
 
-\item{polygon.key}{list of parameters used for \code{\link[graphics]{polygon}} for key}
+\item{polygon.cell}{list of parameters used for \code{\link[graphics:polygon]{graphics::polygon()}} for heatmap}
 
-\item{text.cell}{list of parameters used for \code{\link[graphics]{text}} for matrix entries}
+\item{polygon.key}{list of parameters used for \code{\link[graphics:polygon]{graphics::polygon()}} for key}
 
-\item{key}{list of parameters used for \code{\link[graphics]{axis}}. If set to \code{NULL} then no information will be plotted. Instead of \code{key=list(side=4)} you may use \code{key=4} or \code{key="right"}.}
+\item{text.cell}{list of parameters used for \code{\link[graphics:text]{graphics::text()}} for matrix entries}
 
-\item{axis.col}{list of parameters used for \code{\link[graphics]{axis}} for axis of matrix columns. Instead of \code{axis.col=list(side=1)} you may use \code{axis.col=1} or \code{axis.col="bottom"}.}
+\item{key}{list of parameters used for [graphics::axis(). If set to \code{NULL} then no information will be plotted. Instead of \code{key=list(side=4)} you may use \code{key=4} or \code{key="right"}.}
 
-\item{axis.row}{list of parameters used for \code{\link[graphics]{axis}} for axis of matrix rows. Instead of \code{axis.row=list(side=2)} you may use \code{axis.row=2} or \code{axis.col="left"}.}
+\item{axis.col}{list of parameters used for \code{\link[graphics:axis]{graphics::axis()}} for axis of matrix columns. Instead of \code{axis.col=list(side=1)} you may use \code{axis.col=1} or \code{axis.col="bottom"}.}
+
+\item{axis.row}{list of parameters used for \code{\link[graphics:axis]{graphics::axis()}} for axis of matrix rows. Instead of \code{axis.row=list(side=2)} you may use \code{axis.row=2} or \code{axis.col="left"}.}
 
 \item{axis.key}{as \code{key}}
 
 \item{max.col}{numeric: if the distance between the text color and the cell color is smaller then \code{max.col} then either \code{white} or \code{black} will be used as text color, defaults to \code{70}}
 
-\item{...}{further parameter given to the \code{\link[graphics]{plot}} command}
+\item{...}{further parameter given to the \code{\link[graphics:plot.default]{graphics::plot()}} command}
 }
 \value{
-invisibly a list with elements 
+invisibly a list with elements
 \describe{
 \item{\code{cell.polygon[[i,j]]}}{the \code{polygon} parameters used to draw the elements of the matrix}
 \item{\code{cell.text[[i,j]]}}{the \code{text} parameters used to draw the elements of the matrix}
@@ -80,19 +83,19 @@ invisibly a list with elements
 A \code{NULL} means the elements has not been drawn.
 }
 \description{
-Visualizes a matrix with a colored heatmap and optionally a color key. It distinguishes between numeric and non-numeric matrices. 
-You may need to modify \code{mar} with the \code{\link[graphics]{par}} command from its default \code{c(5.1,4.1,4.1,2.1)}. 
+Visualizes a matrix with a colored heatmap and optionally a color key. It distinguishes between numeric and non-numeric matrices.
+You may need to modify \code{mar} with the \code{\link[graphics:par]{graphics::par()}} command from its default \code{c(5.1,4.1,4.1,2.1)}.
 For further see the vignette \code{vignette('plot.matrix')}
 }
 \details{
-A color key is drawn if either \code{key} (defaults to \code{list(cex=1)}) or \code{fmt.key} 
-(defaults to \code{NULL}) is not \code{NULL}. 
+A color key is drawn if either \code{key} (defaults to \code{list(cex=1)}) or \code{fmt.key}
+(defaults to \code{NULL}) is not \code{NULL}.
 
-If you want to plot the matrix entries you must set either \code{digits} or \code{fmt}. 
-For a non-numeric matrix \code{digits} gives the length of the string printed, a negative value 
-results in right-justified string. For a numeric matrix \code{digits} determines the number of 
-decimal places,  a negative value uses a "exponential" decimal notation. You may set format 
-strings \code{fmt} and \code{fmt.key} directly. Settings \code{digits} leads to the following 
+If you want to plot the matrix entries you must set either \code{digits} or \code{fmt}.
+For a non-numeric matrix \code{digits} gives the length of the string printed, a negative value
+results in right-justified string. For a numeric matrix \code{digits} determines the number of
+decimal places,  a negative value uses a "exponential" decimal notation. You may set format
+strings \code{fmt} and \code{fmt.key} directly. Settings \code{digits} leads to the following
 format strings (\code{n} the absolute value of \code{digits}):
 
 \tabular{ll}{
@@ -102,45 +105,45 @@ format strings (\code{n} the absolute value of \code{digits}):
 \code{x} non-numeric and \code{digits<0}:\tab \code{"\%-ns"}\cr
 }
 
-If no colors are given then the \code{\link[grDevices]{heat.colors}} will be used. Alternatively you may specify your own color function 
-that delivers a vector with \code{n} colors if called by \code{col(n)}. The final colors and breaks used 
+If no colors are given then the \code{\link[grDevices:palettes]{grDevices::heat.colors()}} will be used. Alternatively you may specify your own color function
+that delivers a vector with \code{n} colors if called by \code{col(n)}. The final colors and breaks used
 depend if \code{plot.matrix} gets a numeric or non-numeric matrix.
 
 \strong{Numeric matrix:} In general it must hold \code{length(col)+1==length(breaks)}.
-  \describe{
-  \item{1. \code{breaks==NULL} and \code{col==NULL}}{The colors are taken from \code{heat.colors(10)} and the eleven breaks are calculated as an equidistant grid 
-        between \code{min(x)} and \code{max(x)}.}
-  \item{2. \code{breaks==NULL} and \code{col} is a color function}{Ten colors are taken from the color function and eleven breaks are calculated as an equidistant grid 
-        between \code{min(x)} and \code{max(x)}.}
-  \item{3. \code{breaks==NULL} and \code{col} is a vector of colors}{The \code{length(col)+1} breaks are calculated as an equidistant grid 
-        between \code{min(x)} and \code{max(x)}.}  
-  \item{4. \code{breaks} are given and \code{col==NULL}}{The colors are taken from \code{heat.colors(length(breaks)-1)}.}
-  \item{5. \code{breaks} are given and \code{col} is a color function}{The \code{length(breaks)-1} colors are taken from the color function.}
-  \item{6. \code{breaks} are given and \code{col} is a vector of colors}{If not \code{length(col)+1==length(breaks)} holds then 
-  the \code{length(col)+1} breaks are calculated as an equidistant grid between \code{min(breaks)} and \code{max(breaks)}.}
+\describe{
+\item{1. \code{breaks==NULL} and \code{col==NULL}}{The colors are taken from \code{heat.colors(10)} and the eleven breaks are calculated as an equidistant grid
+between \code{min(x)} and \code{max(x)}.}
+\item{2. \code{breaks==NULL} and \code{col} is a color function}{Ten colors are taken from the color function and eleven breaks are calculated as an equidistant grid
+between \code{min(x)} and \code{max(x)}.}
+\item{3. \code{breaks==NULL} and \code{col} is a vector of colors}{The \code{length(col)+1} breaks are calculated as an equidistant grid
+between \code{min(x)} and \code{max(x)}.}
+\item{4. \code{breaks} are given and \code{col==NULL}}{The colors are taken from \code{heat.colors(length(breaks)-1)}.}
+\item{5. \code{breaks} are given and \code{col} is a color function}{The \code{length(breaks)-1} colors are taken from the color function.}
+\item{6. \code{breaks} are given and \code{col} is a vector of colors}{If not \code{length(col)+1==length(breaks)} holds then
+the \code{length(col)+1} breaks are calculated as an equidistant grid between \code{min(breaks)} and \code{max(breaks)}.}
 }
 
 \strong{Non-numeric matrix:} In general it must hold \code{length(col)==length(breaks)}. At first the number of unique elements in \code{x} is determined: \code{nu}.
-  \describe{
-  \item{1. \code{breaks==NULL} and \code{col==NULL}}{The colors are taken from \code{heat.colors(nu)} and the breaks are set to the unique elements of \code{x}.}
-  \item{2. \code{breaks==NULL} and \code{col} is a color function}{The \code{nu} colors are taken from color function and the breaks are set to the unique elements of \code{x}.}
-  \item{3. \code{breaks==NULL} and \code{col} is a vector of colors}{The \code{length(col)} breaks are calculated as an equidistant grid 
-        between \code{min(x)} and \code{max(x)}.}  
-  \item{4. \code{breaks} are given and \code{color==NULL}}{The colors are taken from \code{heat.colors(length(breaks))}.}
-  \item{5. \code{breaks} are given and \code{color} is a color function}{The \code{length(breaks)} colors are taken from color function.}
-  \item{6. \code{breaks} are given and \code{color} is a vector of colors}{If not \code{length(colors)==length(breaks)} holds then 
-  either \code{breaks} or \code{color} is shorten to the shorter of both.}
+\describe{
+\item{1. \code{breaks==NULL} and \code{col==NULL}}{The colors are taken from \code{heat.colors(nu)} and the breaks are set to the unique elements of \code{x}.}
+\item{2. \code{breaks==NULL} and \code{col} is a color function}{The \code{nu} colors are taken from color function and the breaks are set to the unique elements of \code{x}.}
+\item{3. \code{breaks==NULL} and \code{col} is a vector of colors}{The \code{length(col)} breaks are calculated as an equidistant grid
+between \code{min(x)} and \code{max(x)}.}
+\item{4. \code{breaks} are given and \code{color==NULL}}{The colors are taken from \code{heat.colors(length(breaks))}.}
+\item{5. \code{breaks} are given and \code{color} is a color function}{The \code{length(breaks)} colors are taken from color function.}
+\item{6. \code{breaks} are given and \code{color} is a vector of colors}{If not \code{length(colors)==length(breaks)} holds then
+either \code{breaks} or \code{color} is shorten to the shorter of both.}
 }
 
-If the difference between polygon color and the text color is smaller \code{max.col} then as text color is 
-either \code{white} or \code{black} (depending which one is farer away from the polygon color). 
+If the difference between polygon color and the text color is smaller \code{max.col} then as text color is
+either \code{white} or \code{black} (depending which one is further away from the polygon color).
 The distance is computed as \eqn{\Delta C/3} as in \url{https://en.wikipedia.org/wiki/Color_difference#Euclidean} given.
 }
 \note{
-The use of \code{fmt} or \code{fmt.key} have the same restrictions as the use of \code{fmt} in \code{\link[base]{sprintf}}: 
+The use of \code{fmt} or \code{fmt.key} have the same restrictions as the use of \code{fmt} in \code{\link[base:sprintf]{base::sprintf()}}:
 
-\emph{The format string is passed down the OS's sprintf function, and incorrect formats can cause the latter to crash the R process. 
-R does perform sanity checks on the format, but not all possible user errors on all platforms have been tested, and some might 
+\emph{The format string is passed down the OS's sprintf function, and incorrect formats can cause the latter to crash the R process.
+R does perform sanity checks on the format, but not all possible user errors on all platforms have been tested, and some might
 be terminal.}
 }
 \examples{

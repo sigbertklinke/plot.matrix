@@ -148,7 +148,7 @@ You may influence the appearance by setting your own parameters:
 2. `polygon.cell` list of parameters for drawing polygons for matrix entries
 3. `text.cell` list of parameters for putting for matrix entries as texts
 4. `axis.col` and `axis.row` list of parameters for drawing for row and column axes
-5. `key`, `axis.key` and `polygon.key` to draw the key
+5. `key`, `axis.key`, `spacing.key` and `polygon.key` to draw the key
 6. `max.col` to determine when text color and background color to near
 
 ## Set global parameters
@@ -311,6 +311,27 @@ par(mar=c(5.1, 4.1, 5.1, 4.1))   # adapt margins
 plot(x, key=list(side=3, cex.axis=0.75), breaks=c(0,1))
 ```
 
+The parameter `spacing.key` gives the spacing between plot and the key, the width of the key and the spacing between the key and the axis.
+If you give a vector of length 1 or 2 then the missing values will be appended with the defaults `c(1, 0.5, 0)` 
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 5.1, 4.1))   # adapt margins
+# move key to the top, make axis text smaller, and move key farther away from the plot
+plot(x, key=list(side=3, cex.axis=0.75), breaks=c(0,1), spacing.key=2)
+```
+
+For a very large matrix
+
+```{r fig.height=4, fig.width=4}
+par(mar=c(5.1, 4.1, 5.1, 4.1))   # adapt margins
+xl  <- array(runif(1e4), c(1e2, 1e2))
+brk <- 20
+plot(xl, border=NA, breaks=brk, col=heat.colors(brk), 
+     key=list(side=4,  font=2, cex.axis=0.75), fmt.key="%.2f", 
+     polygon.key=NULL, axis.key=NULL, spacing.key=c(3,2,2))
+```
+
+
 ### Change the output format of the key labels 
 
 You can either use `digits` which changes the output format for all text. If you just want to change the output format for the key labels use `fmt.key`, e.g. 
@@ -406,7 +427,7 @@ par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins
 plot(x, digits=2, text.cell=list(col="yellow", cex=0.75), max.col=-1) 
 ```
 
-By default the text color is replaced by black or white (which is [farer  away](https://en.wikipedia.org/wiki/Color_difference#Euclidean))
+By default the text color is replaced by black or white (which is [further  away](https://en.wikipedia.org/wiki/Color_difference#Euclidean))
 
 ```{r fig.height=4, fig.width=4}
 par(mar=c(5.1, 4.1, 4.1, 4.1))   # adapt margins

@@ -1,7 +1,7 @@
 #' plot.matrix
 #' 
 #' Visualizes a matrix with a colored heatmap and optionally a color key. It distinguishes between numeric and non-numeric matrices. 
-#' You may need to modify \code{mar} with the \code{\link[graphics]{par}} command from its default \code{c(5.1,4.1,4.1,2.1)}. 
+#' You may need to modify \code{mar} with the [graphics::par()] command from its default \code{c(5.1,4.1,4.1,2.1)}. 
 #' For further see the vignette \code{vignette('plot.matrix')}
 #'
 #' @details 
@@ -22,7 +22,7 @@
 #' \code{x} non-numeric and \code{digits<0}:\tab \code{"\%-ns"}\cr
 #' }
 #' 
-#' If no colors are given then the \code{\link[grDevices]{heat.colors}} will be used. Alternatively you may specify your own color function 
+#' If no colors are given then the [grDevices::heat.colors()] will be used. Alternatively you may specify your own color function 
 #' that delivers a vector with \code{n} colors if called by \code{col(n)}. The final colors and breaks used 
 #' depend if \code{plot.matrix} gets a numeric or non-numeric matrix.
 #' 
@@ -53,10 +53,10 @@
 #' }
 #'
 #' If the difference between polygon color and the text color is smaller \code{max.col} then as text color is 
-#' either \code{white} or \code{black} (depending which one is farer away from the polygon color). 
+#' either \code{white} or \code{black} (depending which one is further away from the polygon color). 
 #' The distance is computed as \eqn{\Delta C/3} as in \url{https://en.wikipedia.org/wiki/Color_difference#Euclidean} given.
 #'
-#' @note The use of \code{fmt} or \code{fmt.key} have the same restrictions as the use of \code{fmt} in \code{\link[base]{sprintf}}: 
+#' @note The use of \code{fmt} or \code{fmt.key} have the same restrictions as the use of \code{fmt} in [base::sprintf()]: 
 #' 
 #' \emph{The format string is passed down the OS's sprintf function, and incorrect formats can cause the latter to crash the R process. 
 #' R does perform sanity checks on the format, but not all possible user errors on all platforms have been tested, and some might 
@@ -65,22 +65,23 @@
 #' @param x matrix
 #' @param y unused
 #' @param digits number of digits for numeric data or length of string for non-numeric data 
-#' @param col a vector of colors or a function, e.g. \code{\link[grDevices]{heat.colors}} with one parameter \code{n} 
+#' @param col a vector of colors or a function, e.g. grDevices::heat.colors()] with one parameter \code{n} 
 #' @param breaks breaks for numeric values or values for \code{col}
-#' @param key list of parameters used for \code{\link[graphics]{axis}}. If set to \code{NULL} then no information will be plotted. Instead of \code{key=list(side=4)} you may use \code{key=4} or \code{key="right"}. 
+#' @param key list of parameters used for [graphics::axis(). If set to \code{NULL} then no information will be plotted. Instead of \code{key=list(side=4)} you may use \code{key=4} or \code{key="right"}. 
+#' @param spacing.key spacing between plot and legend, key width, spacing between key and axis  (default: \code{c(1,0.5,0)})
 #' @param axis.key as \code{key}
 #' @param na.col color for missing value (default: white)
 #' @param na.cell to draw cells with missing values (default: \code{TRUE})
 #' @param na.print print NA (or any given characters) when values are missing. If \code{FALSE}, nothing is printed. If \code{na.cell} is \code{FALSE}, this will have no effect.
 #' @param fmt.cell format string for writing matrix entries, overwrites \code{digits}, defaults to \code{NULL}
 #' @param fmt.key format string for writing key entries, overwrites \code{digits}, defaults to \code{fmt}
-#' @param polygon.cell list of parameters used for \code{\link[graphics]{polygon}} for heatmap
-#' @param polygon.key list of parameters used for \code{\link[graphics]{polygon}} for key
-#' @param text.cell list of parameters used for \code{\link[graphics]{text}} for matrix entries
-#' @param axis.col list of parameters used for \code{\link[graphics]{axis}} for axis of matrix columns. Instead of \code{axis.col=list(side=1)} you may use \code{axis.col=1} or \code{axis.col="bottom"}.
-#' @param axis.row list of parameters used for \code{\link[graphics]{axis}} for axis of matrix rows. Instead of \code{axis.row=list(side=2)} you may use \code{axis.row=2} or \code{axis.col="left"}.
+#' @param polygon.cell list of parameters used for [graphics::polygon()] for heatmap
+#' @param polygon.key list of parameters used for [graphics::polygon()] for key
+#' @param text.cell list of parameters used for [graphics::text()] for matrix entries
+#' @param axis.col list of parameters used for [graphics::axis()] for axis of matrix columns. Instead of \code{axis.col=list(side=1)} you may use \code{axis.col=1} or \code{axis.col="bottom"}.
+#' @param axis.row list of parameters used for [graphics::axis()] for axis of matrix rows. Instead of \code{axis.row=list(side=2)} you may use \code{axis.row=2} or \code{axis.col="left"}.
 #' @param max.col numeric: if the distance between the text color and the cell color is smaller then \code{max.col} then either \code{white} or \code{black} will be used as text color, defaults to \code{70}
-#' @param ... further parameter given to the \code{\link[graphics]{plot}} command
+#' @param ... further parameter given to the [graphics::plot()] command
 #' @return invisibly a list with elements 
 #' \describe{
 #' \item{\code{cell.polygon[[i,j]]}}{the \code{polygon} parameters used to draw the elements of the matrix}
@@ -95,6 +96,7 @@
 #' @importFrom grDevices heat.colors col2rgb
 #' @importFrom graphics axis polygon text
 #' @importFrom utils modifyList
+#' @md
 #' @export 
 #' @method plot matrix
 #'
@@ -141,6 +143,8 @@ plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors,
                         digits=NA, 
                         fmt.cell=NULL, 
                         fmt.key=NULL, 
+                        #
+                        spacing.key = c(1, 0.5, 0),
                         #
                         polygon.cell=NULL,
                         polygon.key=NULL,
@@ -286,6 +290,9 @@ plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors,
         if (is.null(axis.key$side)) axis.key$side <- 4
       }
     } 
+    if (length(spacing.key)==1) spacing.key <- c(spacing.key, 0.5, 0)
+    if (length(spacing.key)==2) spacing.key <- c(spacing.key, 0)
+    if (length(spacing.key)>3) warning("Parameter 'spacing.key' is too long")
   }
   ## prepare basic plot
   args <- ellipsis <- list(...)
@@ -305,7 +312,7 @@ plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors,
   if (is.null(args$xlab)) args$xlab <- if (is.null(dimn[2])) 'Column' else dimn[2]
   if (is.null(args$ylab)) args$ylab <- if (is.null(dimn[2])) 'Row' else dimn[1]
   d <- c(0,0,0,0,0)
-  if (!is.null(axis.key)) d[axis.key$side] <- 1
+  if (!is.null(axis.key)) d[axis.key$side] <- sum(spacing.key)
   if (is.null(args$xlim)) args$xlim <- c(0.5-d[2], ncol(x)+0.5+d[4])
   if (is.null(args$ylim)) args$ylim <- c(0.5-d[1], nrow(x)+0.5+d[3])
   if (is.null(args$xaxs)) args$xaxs <- 'i'
@@ -454,18 +461,19 @@ plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors,
     ret$key.polygon <- vector("list", length(col))
     for (i in 1:length(col)) {
       if (axis.key$side==1) {
-        # not yet implemented?
+        polygon.key$x <- c(blocks[i], blocks[i+1], blocks[i+1], blocks[i])      
+        polygon.key$y <- c(-spacing.key[2]-spacing.key[1]+0.5, -spacing.key[2]-spacing.key[1]+0.5, -spacing.key[1]+1, -spacing.key[1]+1)
       }
       if (axis.key$side==2) {
-        polygon.key$x <- c(-0.5, -0.5, 0, 0)
+        polygon.key$x <- c(-spacing.key[2]-spacing.key[1]+0.5, -spacing.key[2]-spacing.key[1]+0.5, -spacing.key[1]+1, -spacing.key[1]+1)
         polygon.key$y <- c(blocks[i], blocks[i+1], blocks[i+1], blocks[i])        
       }
       if (axis.key$side==3) {
         polygon.key$x <- c(blocks[i], blocks[i+1], blocks[i+1], blocks[i])        
-        polygon.key$y <- c(nrow(x)+1, nrow(x)+1, nrow(x)+1.5, nrow(x)+1.5)
+        polygon.key$y <- c(nrow(x)+spacing.key[1], nrow(x)+spacing.key[1], nrow(x)+spacing.key[1]+spacing.key[2], nrow(x)+spacing.key[1]+spacing.key[2])
       }
       if (axis.key$side==4) {
-        polygon.key$x <- c(ncol(x)+1, ncol(x)+1, ncol(x)+1.5, ncol(x)+1.5)
+        polygon.key$x <- c(ncol(x)+spacing.key[1], ncol(x)+spacing.key[1], ncol(x)+spacing.key[1]+spacing.key[2], ncol(x)+spacing.key[1]+spacing.key[2])
         polygon.key$y <- c(blocks[i], blocks[i+1], blocks[i+1], blocks[i])
       }
       polygon.key$col <- col[i]

@@ -1,8 +1,8 @@
 Package: plot.matrix
 Type: Package
 Title: Visualizes a Matrix as Heatmap
-Version: 1.5.4
-Date: 2020-11-10
+Version: 1.6
+Date: 2021-04-26
 Authors@R: 
   c(person("Sigbert", "Klinke", email="sigbert@hu-berlin.de", role=c("aut", "cre")),
     person("Frédéric", "Chevalier",  email="fcheval@txbiomed.org", role="ctb"))

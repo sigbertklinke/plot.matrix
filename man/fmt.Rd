@@ -4,7 +4,7 @@
 \alias{fmt}
 \title{fmt}
 \source{
-Similar to fucntion \code{fmt} from the package \href{https://CRAN.R-project.org/package=exams}{exams}.
+Similar to function \code{fmt} from the package \href{https://CRAN.R-project.org/package=exams}{exams}.
 In the function \code{round2} has been replaced by \code{round}.
 }
 \usage{
@@ -28,18 +28,21 @@ Rounds and adds trailing zeros (by default if digits is lower than 4).
 \examples{
 ## this is also employed internally in the fmt() formatting function
 fmt(c(0.005, 0.015))
+
 ## the main purpose of fmt() is that some numeric result can be displayed
 ## both at high accuracy and then at the rounding that students should do
 ## (e.g., with 2 or 3 digits)
 sol <- runif(1)
 fmt(sol, 6)
 fmt(sol, 2)
-## but fmt() also assures showing a very high numer of significant digits
+
+## but fmt() also assures showing a very high number of significant digits
 ## (up to 12)
 sol <- 123456 + sol
 sol
 fmt(sol, 6)
 fmt(sol, 2)
+
 ## and fmt() also takes care of adding trailing zeros (if digits < 4)
 fmt(1)
 fmt(1, digits = 3)
