@@ -134,6 +134,15 @@
 #' plot(x, digit=2)
 #' plot(x, na.print=FALSE)
 #' plot(x, na.cell=FALSE)
+#' # use the standard plot instead of plot.matrix
+#' x <- matrix(runif(50), nrow=2)
+#' plot(as.data.frame(x))
+#' plot.default(x)
+#' \dontrun{
+#' # unload the package permanently with devtools
+#' library("devtools")
+#' unload('plot.matrix')
+#' }
 plot.matrix <- function(x, y=NULL, breaks=NULL, col=heat.colors, 
                         #
                         na.col="white", 

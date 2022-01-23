@@ -234,6 +234,54 @@ for (i in 1:nrow(param_est)) {
 }
 ```
 
+## How can I use `plot.matrix` and the default scatter plot in parallel?
+
+The example illustrates the problem: the loadings of the factor analysis should be plotted as matrix and the factor scores as a scatter plot.
+
+```{r, warning=FALSE}
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins such that all labels are visible
+library("plot.matrix")
+library("psych")
+fa <- fa(iris[,-5], 2)
+plot(fa$loadings) 
+plot(fa$scores)
+```
+
+### Solution 1: Convert the matrix to a `data.frame` 
+
+```{r, warning=FALSE}
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins such that all labels are visible
+fa <- fa(iris[,-5], nfactor=2)
+plot(fa$loadings) 
+plot(as.data.frame(fa$scores))
+```
+
+### Solution 2: Use `plot.default`
+
+```{r, warning=FALSE}
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins such that all labels are visible
+fa <- fa(iris[,-5], nfactors=2)
+plot(fa$loadings) 
+plot.default(fa$scores)
+```
+
+### Solution 3: Unload the package `plot.matrix` permanently
+
+If do not want to use the package `plot.matrix` for further plotting then unload the package including the installed S3 functions with `devtools::unload`
+
+```{r, warning=FALSE}
+par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins such that all labels are visible
+library("plot.matrix")
+library("psych")
+fa <- fa(iris[,-5], 2)
+plot(fa$loadings) 
+devtools::unload('plot.matrix') # Package devtools must be installed!
+plot(fa$scores)
+```
+
+```{r, include = FALSE}
+library('plot.matrix')
+```
 
 # Modifying a plot
 

@@ -103,6 +103,7 @@ assignColors(sample(letters[1:10], 50, replace=TRUE))
 ```
 
 # History
+  * 2022-01-23 Updated vignette FAQ/example, version 1.6.1
   * 2021-04-26 Added spacing.key, Rmd-fying help, version 1.6 
   * 2020-11-10 Added two examples for using plot results
   * 2020-11-01 Version 1.5.2 cleaned documentation
