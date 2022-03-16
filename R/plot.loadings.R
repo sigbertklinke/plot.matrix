@@ -59,7 +59,7 @@ plot.loadings <- function(x, reorder = TRUE, gray=FALSE, grey=FALSE, ...) {
     #   since 1.4
     o <- apply(x, 1, function(v) { v<-v^2; c(which.max(v), -max(v))})
     o <- order(o[1,], o[2,])
-    args$x <- args$x[o,]
+    args$x <- args$x[o,,drop=FALSE]
   }
   do.call("plot.matrix", args)
 }

@@ -1,5 +1,5 @@
 ---
-title: "plot.matrix"
+title: "`r sprintf('plot.matrix v%s', packageVersion('plot.matrix'))`"
 author: 
 - name: "Sigbert Klinke" 
   email: sigbert@hu-berlin.de
@@ -236,7 +236,8 @@ for (i in 1:nrow(param_est)) {
 
 ## How can I use `plot.matrix` and the default scatter plot in parallel?
 
-The example illustrates the problem: the loadings of the factor analysis should be plotted as matrix and the factor scores as a scatter plot.
+The example illustrates the problem: the loadings of the factor analysis should be plotted as matrix and the factor scores
+as a scatter plot.
 
 ```{r, warning=FALSE}
 par(mar=c(5.1, 4.1, 4.1, 4.1)) # adapt margins such that all labels are visible

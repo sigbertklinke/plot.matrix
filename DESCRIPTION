@@ -1,8 +1,8 @@
 Package: plot.matrix
 Type: Package
 Title: Visualizes a Matrix as Heatmap
-Version: 1.6.1
-Date: 2022-01-23
+Version: 1.6.2
+Date: 2022-03-16
 Authors@R: 
   c(person("Sigbert", "Klinke", email="sigbert@hu-berlin.de", role=c("aut", "cre")),
     person("Frédéric", "Chevalier",  email="fcheval@txbiomed.org", role="ctb"))
@@ -11,11 +11,13 @@ License: GPL-3
 URL: https://github.com/sigbertklinke/plot.matrix (development version)
 RoxygenNote: 7.1.2
 LazyData: true
-Suggests:
-    devtools,
-    knitr,
-    rmarkdown,
-    psych,
-    png
+Suggests: devtools, knitr, rmarkdown, psych, png
 VignetteBuilder: knitr
 Encoding: UTF-8
+NeedsCompilation: no
+Packaged: 2022-01-23 10:33:40 UTC; sk
+Author: Sigbert Klinke [aut, cre],
+  Frédéric Chevalier [ctb]
+Maintainer: Sigbert Klinke <sigbert@hu-berlin.de>
+Repository: CRAN
+Date/Publication: 2022-01-23 11:02:41 UTC

@@ -46,7 +46,7 @@ plot.cor <- function(x, reorder = TRUE, gray=FALSE, grey=FALSE, ...) {
     o  <- hclust(dist(args$x))$order
     rn <- rownames(x)
     cn <- colnames(x)
-    args$x <- if ((length(cn)==length(rn)) && all(rn==cn)) args$x[o,o] else args$x[o,]
+    args$x <- if ((length(cn)==length(rn)) && all(rn==cn)) args$x[o,o,drop=FALSE] else args$x[o,,drop=FALSE]
   }
   do.call("plot.matrix", args)
 }
